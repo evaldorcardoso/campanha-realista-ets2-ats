@@ -1,0 +1,302 @@
+00:00:01
+Olá, amigos, sejam bem-vindos ao canal Tio Restanho. Você tá cansado do Euro Truck Simulator 2 e do American Truck Simulator? Você fala: "Não tem mais graça, restanho. Eu já comprei todas as garagens, eu comprei todos os caminhões,eu já não tenho objetivo no jogo. H,então deixa comigo, amigão, deixa comigo. Eu vou te ensinar hoje, neste vídeo a fazer uma carreira realista
+
+00:00:26
+dentro do American Truck Simulator ou do Euro Truck Simulator, tanto faz, tá?Vamos lá, então. Primeira coisa,pega um papel e uma caneta ou um caderno e uma caneta ou se você quiser anotar no celular, faça o que você quiser. Mas o que é mais importante é que você anote,porque a carreira realista ela passa por muitas regras. São muitas regras.
+
+00:00:56
+Vamos lá, então. Então, tá bom. Ó, o t regras anotadas aqui e eu vou passar elas com vocês, tá bom? Primeira coisa,o vídeo vai ficar dividido em três e grandes grupos. O primeiro deles é a parte do setup do jogo, o segundo é a regra das campanhas e o terceiro é são as regras da gam play, porque não é só você seguir umas regras de setup do jogo, não. Você tem que jogar de uma
+
+00:01:26
+maneira diferente, beleza? Né? Bom,vamos lá. Vamos começar então com o setup do jogo. Pessoal, primeira coisa,você vai precisar usar basicamente quatro comandos no console. Basicamente quatro comandinhos só. E aí é o seguinte, eh, [limpando a garganta] você precisa habilitar o console no seu jogo,tá? Então, a primeira coisa que você vai fazer,
+
+00:01:52
+você vai acessar o a sua pasta documentos e acessar o American Truck Simulator ou o Euro Euro Truck Simulator 2. E você vai achar esse arquivo aqui, ó, config.cfg.
+
+00:02:07
+Aí você vai abrir eles ele com um editor de texto. Eu recomendo o Notepad mais+ é gratuito, tá? Eu recomendo que você use ele. Aí a primeira coisa que você vai procurar é console.
+
+00:02:21
+Você vai achar essa linha aqui, ó. Use T G con C console. No teu, no provavelmente no seu jogo vai tá zero,você vai mudar ele para um, vai deixar igual, tá aqui, ó. Tá bom? Beleza? E a segundo é que você vai procurar developer.
+
+00:02:39
+Eu, se você procurar developer já vai aparecer. Aí você pode colocar um ou dois, eu deixo no tá OK. Beleza. Depois que você fizer isso daí, você salva o arquivo e fecha ele. Beleza, né? Então, tá bom,não precisamos mais disso aqui. Vamos voltar pro jogo.
+
+00:03:02
+Faça isso com o jogo desligado, né,pessoal? Então, antes de entrar no jogo,você vai fazer esse setup, tá bom?Depois que você salvar o arquivo, aí você entra no jogo. Quando você apertar o aspas em cima do tab, vai aparecer o console aqui, ó. Tá vendo? Vai aparecer o console para você. Vamos expandir o console aqui. E aí, os comandos são os seguintes, pessoal. Primeira coisa,
+
+00:03:28
+você vai mudar o coeficiente de frenagem do caminhão, tá? Então você vai escrever G underline brake, que é B R A K E underline intensity com Y. Aqui, ó, intensity com Y.
+
+00:03:52
+No meu caso, eu já mudei, estou com 0,28. O default do jogo é um, você vai deixar com 0, tá? Como é que você faz isso? Você vai dar um espaço depois do break intensity ali e vai colocar 0.3,tá? É isso daí, ó. Isso daqui vai fazer com que agora o freio fique em 0.3. É 30% do da potência de frenagem do camião. Vai deixar as coisas bem interessantes, pessoal. Bem
+
+00:04:21
+interessantes. Segunda coisa que você vai mudar de forma eh definitiva é o tráfego, pessoal. Então, Gline traffic com TR A F I.
+
+00:04:36
+O o default do jogo é um, você vai deixar dois.Você vai dobrar a quantidade do tráfego de novo, pessoal. deixa as coisas bem interessantes, só que pode causar alguns acidentes, mas deixa bem legal o negócio. Se você quer tentar com três,tente eh por sua conta e risco. Se eu não me engano, ele aceita até 10, tá?
+
+00:05:01
+Mas tente por sua conta de risco. Com dois já começa a ficar bem interessante,tá bom? Ótimo. Essas são as duas modificações definitivas. Pessoal, agora vem uma que toda vez que você entrar no jogo, você tem que executar esse comando. E ele é opcional, que é o seguinte, pessoal, é o comando warp,então WP,ele deixa, se você utilizar um
+
+00:05:33
+coeficiente menor do que um, ele deixa o jogo um pouco mais lento.Eu, a meu ver, essa é minha opinião,você pode testar aí à vontade. 0.92 se aproxima mais da realidade da velocidade de aproximação de um caminão.
+
+00:05:52
+A meu ver, tá? A meu ver. [roncando] Só que o que acontece com esse comando,pessoal? Toda vez que o jogo iniciar,ele vai voltar para um. Então você tem que executar o comando. Então você vai digitar WP espaço 0.92 e dá enter. Todo comando que você quiser confirmar, você dá enter, tá bom?
+
+00:06:13
+Beleza?E aí, pessoal, o último comando que você eventualmente vai precisar usar é o de alteração de de tempo, tá? Que é esse daqui, ó, é o G_line set_line time, né? Então, G S T I M E. E aí ele funciona assim, ó.
+
+00:06:37
+Espaço, as duas primeiras dígitos é a hora.Os dois dígitos seguintes são o minuto,tá? Então você pode colocar a hora que você quiser.
+
+00:06:51
+Se você tiver às 8 horas da noite no jogo e colocar 5 horas da manhã, ele vai pular o dia e vai para 5 horas da manhã.Se você tiver 5 horas da manhã e colocar 8 horas da noite, ele vai colocar às 8 horas da noite daquele mesmo dia. É isso. Basicamente a regra é esse. É essa. Quando a gente chegar na gameplay,você vai entender porque que é que esse comando às vezes será necessário, tá
+
+00:07:17
+bom? Beleza. De comandos é basicamente isso. Então, tá bom. Bom, agora vamos fazer a parte das opções, tá bom?Primeira coisa aqui é o seguinte, é quando você vem em opções de jogo, você vai deixar o o cansaço habilitado,só que você não vai deixar a parada obrigatória habilitada. Por que não,pessoal? Porque é o seguinte, quando você pega no ATS, quando você pega
+
+00:07:50
+cargas de 500 milhas ou no ETS2 você pega cargas de 700, 800 km,você não tem tempo suficiente para eh num período de descanso, que é enquanto o motorista tá descansado, você não tem tempo suficiente para cumprir essa essa quilometragem sem atingir às 11 horas de descanso lá que é necessário, que é a parada obrigatória. Só que se você executa a parada obrigatória, dependendo
+
+00:08:24
+da carga e isso acontece com uma frequência alta, você extrapola o limite de entrega da carga e daí você não ganha nada com a carga. Então assim, e os testes que eu fiz, eu prefiro deixar a parada obrigatória desligada, porém o o a fadiga, o o cansaço, esse sim. E agora com o sistema novo de descanso funciona muito bem.
+
+00:08:48
+Aí o o traffic offense aqui você vai que as infrações de trânsito você vai deixar habilitada. E aqui, ó, a dificuldade de estacionamento você vai deixar ela randômica, aleatória, tá? Você vai deixar ela aleatória, pessoal. Então,para quem tem volante, tá? Então, e joga com H, né? Você vai vir aqui, você vai,por exemplo, assim, hora que você selecionar o H Shifter aqui, ele vai
+
+00:09:16
+habilitar para você. Aí você vai selecionar o seguinte, ó. O comportamento da transmissão você vai deixar avançado e a mudança de marcha com eh o pressionar da embreagem. Isso vai fazer a o comportamento da transmissão do caminão e da embreagem do camião ficar bem real, tá bom? Então isso aqui você vai habilitar só para quem joga com H, tá? Se você não joga
+
+00:09:40
+com H, você não precisa fazer nada disso aqui.Pessoal, outra coisa importante, eh, não alterem o G income factor do jogo, tá? O default dele é um. Então aqui, ó, G_line incom N C O M E underline F A C T O R. Ó, o meu, o padrão do jogo é um, o meu tá em um. Não alterem isso, senão vai bagunçar aí a tua campanha realista, tá bom?
+
+00:10:16
+Beleza. Vamos embora. Segue anotando aí,segue anotando, pessoal.Ó, outra coisa importante, a campanha realista ela ela pode ser feita com qualquer perfil seu. Você não precisa abrir um perfil novo, tá? Então, por exemplo, aqui, ó,eu vou dar eu vou vou mostrar para vocês. Eu tô usando o meu perfil é sem mods, tá? Então, assim, ó, eu tenho um
+
+00:10:42
+monte de de motorista trabalhando e tal,não sei o quê. pessoal, é tranquilo, não precisa, não precisa eh ser ser feito em outra campanha, tá? Você não precisa abrir ela do zero, você pode usar que você tem mesmo, não tem problema, tá bom?
+
+00:11:01
+Eh, aí é o seguinte, eh, ainda lá dentro de opções do jogo, aí fica a seu critério, tá? Eh, mas na primeira fase da da campanha realista, eh, tenta reduzir a a distância de de cargas para você não ir muito longe da sua base, como se você trabalhasse mais na região.
+
+00:11:28
+Entenderam? Quando você passar pro segundo nível, aí você vai aumentando a possibilidade de cargas mais longas, tá?A campanha tem quatro níveis, eu já explico para vocês, tá bom? Eh, então assim, no começo, na primeira fase,deixa mais reduzido para você trabalhar mais local. Aí você vai entender que esse trabalhar mais local, ele te ajuda,tá? Ele ele vai te ajudar.
+
+00:11:55
+Eh, e aí, eh,lá na seleção de cargas,aqui na seleção de cargas, você vai deixar sempre para, eh, pela data, pelo tempo de inspiração a carga. Eh, também a hora que a gente entrar lá nas regras da campanha, você vai entender porque que eu vou deixar isso daqui. Isso daqui vai ficar na primeira e na segunda fase.
+
+00:12:18
+Nas outras fases aí não precisa ser assim, tá bom? Beleza,vai anotando tudo, pessoal. É bastante coisa. Vamos pro segundo, pra segunda parte do vídeo agora, que são as regras da campanha, tá? Então, a campanha ela,ela ela é composta por quatro fases.
+
+00:12:37
+Vamos lá. São quatro fases. A primeira fase é a que é a que você é empregado.Você é empregado de uma empresa. A segunda fase, ela é o você é empregado, mas você tem um caminão próprio. Então você não tá trabalhando com o camião da empresa, você tá trabalhando com o seu caminhão, mas você é empregado daquela empresa, como se fosse um agregado, né? É isso. A
+
+00:13:04
+terceira fase é a fase que você vira autônomo. Nesta fase você tem o caminhão e o reboque.Beleza? Então tá bom. Nessa fase você se você não tá mais vinculado a uma empresa específica, aí você pode transportar para quem te ofertar o melhor preço. É uma fase já mais legal, tá? Só que vai,você vai ter que trabalhar muito para chegar nesse nesse ponto, pessoal. E a
+
+00:13:30
+quarta fase é a fase empresário, que é a fase final que, por exemplo, esta minha campanha está, né? Então, eu tenho o meu caminhão e eu tenho outros caminões com empregados trabalhando para mim. Mas calma lá, pessoal, que ainda tem um monte de regra, tá? Tem um monte de regra. Bom, para você abrir a tua campanha realista, nós você vai fazer o seguinte, você precisa escolher uma
+
+00:13:55
+cidade como base. No meu caso, pessoal,eu escolhi,deixa eu pegar aqui, eu escolhi San Diego, tá? Então, eu vim aqui e eu peguei a cidade de San Diego. Na cidade de San Diego eu tenho diversas empresas,certo? Eu escolhi a Plaster Songs. Então, a empresa que eu sou empregado é a Plaster Sonss, tá? Eu podia ter escolhido a Bitumen, eu podia
+
+00:14:26
+ter escolhido a Costal Mine, a Lone Star, eu podia ter escolhido qualquer uma. Eu escolhi a Plaster Song. Minha escolha. Você tem que lembrar que essa é a tua base. A, inclusive a a o a pousada que você tem que pagar quando você tiver na sua base, porque você não vai estar em trajeto, não é a empresa que vai pagar, é aqui em San Diego. Se você qualquer dia que migrar, né, de um dia
+
+00:14:56
+pro outro, que você tiver fora de San Diego e você não tiver em trajeto, você tem que pagar estadia onde você tiver.Então se liga aí, tá bom?
+
+00:15:08
+Escolheu a cidade, escolheu a cidade,escolheu a empresa, você avança o tempo do jogo para que seja segunda-feira às 7 horas da manhã. Tá bom? Ah, mas o ô restante, o meu camião próprio, que é o o que eu tô usando, ele está lá em algum lugar. O meu, no caso, ele tá em Albuquerker, ele tá por aqui, ó. Deixa,deixa o teu caminão da tua campanha normal lá. Não, não, não, não esquenta a
+
+00:15:35
+cabeça. A tua campanha realista, ela vai ser aqui, ó. Ela vai ser aqui no caderno, tá? Beleza? Então, ó, essa é a o início da coisa. Escolher a cidade,escolher a empresa. Então, vamos lá.
+
+00:15:50
+Vamos começar com o as regras para você ser empregado. O turno ele começa às 7 da manhã. Então, às 7 da manhã de cada dia você tem que tá na tua empresa.
+
+00:16:05
+Então, por isso que aquele comando de avançar tempo ele vai ser necessário,porque às vezes, e aí eu vou deixar uma dica para você, eu deixo o meu caminhão próprio já parado num parking para eu poder avançar o tempo mais facilmente.
+
+00:16:23
+Porém, pessoal, é quando você tá descansado, totalmente descansado, você não consegue avançar o tempo e você encerra teu turno no sábado e só volta na segunda.
+
+00:16:35
+Então você vai precisar do comando de avançar tempo para poder ir pra segunda,porque pelo método novo do jogo agora você não vai conseguir. Bom, então olha só, anota aí pessoal. Turno começa 7 da manhã. Você tem uma hora de almoço, você tem uma hora de janta. Se você tiver em trajeto, né? E você tem uma hora de café da manhã se você tiver em trajeto, tá bom? Beleza. O café da manhã, pessoal,
+
+00:17:01
+ele custa 15€ é dólares ou euros, né? O almoço 25 e o jantar 20. E a estadia quando você estiver, não estiver em trajeto é $45 ou euros, tá? Então esse é o os custos iniciais.
+
+00:17:21
+a renda, eh, lembrando, pessoal, o café da manhã, almoço, janta,esses custos você tem por dia quando você não está trabalhando, quando você está em trajeto, você, a empresa paga isso para você, obviamente, né? Bom, o teu salário, pessoal, você vai ter um salário de 1300 eh dólares ou euros por mês, que ele é pago a cada 30 dias. Então você vai
+
+00:17:51
+anotar dia 1, dia 2, dia 3, dia 4 no teu caderno, no celular, onde você quiser.Quando chegar no dia 30, você recebe 1300 €. Tá? Só que é o seguinte, a tua comissão ela é 5% do valor do fret.
+
+00:18:07
+Então o que que isso significa?Significa o seguinte, pessoal. Vamos supor que eu escolhesse aqui, ó, essa carga aqui, lógico, ela tinha que ser da minha empresa, né, pessoal? só vai sair com carga da tua empresa.
+
+00:18:21
+Então, nesse caso aqui, ó, vamos até fazer o seguinte, ó. Vamos pegar da plaster sons, ó. Vamos imaginar que eu pegasse esse essa viagem aqui, que eu estivesse lá na cidade de Boys e pegasse essa viagem. Ó, ele ele vai me pagar 4.956.
+
+00:18:39
+Esse é o frete. O que eu recebo é 5% disso. Se você não aprendeu porcentagem,não sabe fazer conta, vai ter que usar calculadora, pessoal, tá? Então é 5% disso quando você entregar a carga, 5% disso é o que fica para você, tá? Que você vai anotar como ganho além do teu salário. Entendido? Beleza? Bom, nesta fase do jogo, como é que funciona pedágio, pessoal? é pago pelo empregador
+
+00:19:10
+e todos os caminões da empresa t. É, tem história do tag também, pessoal. Calma lá, hein? E o combustível ele é pago pela empresa. Você não precisa se incomodar com isso. A estadia e alimentação, quando você estiverem em viagem é tudo paga pelo empregador, tá?
+
+00:19:28
+É tudo pago pela empresa, tá bom? E aí é o seguinte, você tem que considerar a descarga do caminhão, considerar duas horas de descarga, tá? Por que isso,pessoal? Quando a gente chegar lá na regra da gameplay, você vai você vai entender. E o intervalo de jornada também, você tem que respeitar às 11 horas, né? Você vai ter que simular isso daí.
+
+00:19:53
+Eh, o transporte, então, como eu falei,ele é feito apenas paraa sua empresa.Você você carrega na sua empresa e leva para onde for, mas você só pega a carga na sua empresa. Na sua sede não, você pode pegar em outras,desde que você esteja lá, né? Esteja naquela cidade. Vamos supor, vamos supor, pessoal, ó, todas essas cidades tter sons, ó. Tá vendo? Eu estava na
+
+00:20:24
+cidade de Robs, deixa eu acho que para Roswell. Eu peguei uma carga para Roswell. Depois eu fiz um deslocamento até Hobbes, porque Robs era o o mais perto ou eu cheguei com uma carga para Hobbs, uma coisa assim. E aí de Hobbies eu peguei uma carga para uma outra cidade, mas é porque eu estava lá. Eu poderia pegar uma uma carga de Cloves,não. Eu teria que me deslocar até
+
+00:20:49
+Cloves. Então, entenderam como é que é?Se eu entregar uma carga em lacruces,por exemplo, eu vou ter que contar o tempo de translado até socorro ou até CBD para poder ir pra minha sede.
+
+00:21:06
+Ah, mas rest, [limpando a garganta] como é que você faz isso? Você mais ou menos calcula o tempo que levaria para você fazer essa viagem, né? É mais ou menos isso. Você vê que na prática você vai saber mais ou menos quantas horas vai gastar. Lembrando que quando você chegar na cidade, então você tem 2 horas de descarga, tá bom? Tá? Questão de multas,pessoal, as multas são descontadas de
+
+00:21:29
+você, tá? Então, se você cometer infração, você tem que pagar. Você vai ver que é pesado, hein? Tem que tomar muito cuidado. Ah, uma outra coisa importante que eu acabei não mencionando, desliguem a Fernandinha,tá? Então assim, quando você vier em opções aqui, opções de áudio, vocês vão desabilitar a Fernandinha. Cadê? Aqui,ó. Ó, tá desabilitado. Tá vendo, ó? Eu
+
+00:21:57
+desabilitei.Desabilitem a Fernandinha. Apesar que eu acho que eu ia falar na gameplay, né?Mas tudo bem, pessoal. E daí demissão.
+
+00:22:05
+Em caso de tombamento, se você tombar o caminão, você é demitido.E se você for demitido, você vai ficar 10 dias parado até você achar um novo emprego. Então você vai contar esses dias, jogar o tempo pra frente.
+
+00:22:20
+Lembrando que todo dia você vai ter que se alimentar e pagar estadia. Então assim, no começo eu não aconselho vocês a tombarem o caminhão, tá?
+
+00:22:32
+Complicado, pessoal. Vamos lá, ó. É a segunda fase, que é a fase que eu,beleza, eu trabalhei bastante e eu consegui comprar um camião. Então, o turno, você ainda é empregado, mas tem um camião próprio. Então, o turno continua começando às 7. Almoço de 1 hora, janta de 1 hora, café da manhã de 1 hora. O café da manhã, o almoço e a janta são os mesmos preços, né? Café da
+
+00:22:56
+manhã 15, almoço 25, janta 20. A estadia fora de viagem 45.O teu salário sobe para 00 ou euros por mês, também pago a cada 30 dias. E a tua comissão ela vai subir para 10% do valor eh do frete, tá? Então ele melhora, ele sai de cinco e vai para 10. O pedágio continua sendo pago pelo empregador, tá?
+
+00:23:26
+Só que você, para você poder usufruir dos pedágios automáticos, você tem que comprar uma tag que custa 15€ por país.Anota aí, cara. Anota aí. O combustível é pago por você, tá? A estadia quando você tiver em viagem e a alimentação quando você tiver em viagem, o teu empregador vai pagar, tá bom? A manutenção do caminhão é por tua conta,você que vai ter que pagar. Nada disso
+
+00:23:53
+deles se aproveitarem.A descarga é 2 horas, o intervalo de jornada é 11. O transporte você vai carregar só paraa empresa que tá que você tá transportando e as multas serão pagas por você.
+
+00:24:10
+Em caso de tombamento,você pode ser demitido, tá? E aí você vai ficar 10 dias parado até achar o novo emprego e 30 dias para consertar o caminão. Se você tiver dinheiro para consertar o caminão, tem isso também,hein? Tem isso também. E aí é o seguinte, pessoal, vocês, se vocês forem financiar um um caminhão,[limpando a garganta] por isso que daí
+
+00:24:35
+talvez é legal você já pegar uma campanha tua que tá rodando, né? Porque daí você vai ter dinheiro em caixa para fazer as coisas, mas eh você vai simular um financiamento. O que que é o financiamento? Se você financiar .000, por exemplo, o teu financiamento ele é 10.000 o valor que você financiou mais 20% dividido por 12 meses. Essas 12 parcelas elas serão pagas a cada 30
+
+00:25:02
+dias, tá? Então, diferente do que é ali no jogo que é todo dia pagando, esquece isso daí. Vai funcionar como se fosse mais ou menos na vida real. Então, você emprestou 10.000, 1000 você vai pagar 20% 12.000 12.000 dividido por 12 meses,1000 por mês. É isso que você vai pagar do teu financiamento de eh 10.000.
+
+00:25:25
+Beleza? Tá bom. Vamos pro nível três agora. O nível três é eu comprei um reboque e agora eu sou autônomo, né?Então o turno você fica livre para começar a hora que você quiser. Almoço,janto e café da manhã. Uma hora de parada. Os custos de café da manhã,almoço, jantar e estadia continua a mesma coisa, né? Então 15, 25, 20 e 45 nessa sequência. [roncando] Agora é
+
+00:25:53
+diferente, pessoal. A tua renda, você não tem mais salário, mas a tua renda é 20% do valor do frete, então você acaba ganhando mais, né? Só que o pedágio é pago por você. A regra do tag tá ainda valendo. Então você precisa comprar uma tag para cada país que custa 15 €.
+
+00:26:13
+Combustível é pago por você. E aí agora,pessoal, estadia, alimentação e a manutenção é tudo pago por você. Não tem mais empresa te bancando aí, hein?
+
+00:26:26
+E aí, pessoal?Regras de descarga.Aí o jogo, o próprio jogo vai calcular,né? Mas é mais ou menos umas 2 horas.
+
+00:26:34
+Intervalo de jornada 11 horas. Aqui você pode transportar para qualquer pessoa.Em casos de acidentes leves, sem tombamentos, dois dias para consertar o caminão. Se tiver tombamento, pessoal,30 dias para consertar o caminão. E aí nos dias você vai ter que pagar tudo,né? As multas são pagas por você e a regra do financiamento é a mesma. valor financiado mais 20% dividido por 12
+
+00:27:02
+meses. A cada 30 dias você vai ter que pagar uma parcela, tá bom? No caso do ATS, pessoal, você vai pagar a cada 30 dias os 200 de seguro do veículo. No caso do ATS, o ETS2 não tem isso, tá bom? Anota aí. E aí a última, né,[limpando a garganta] eh, última fase é a fase empresário. As regras são todas iguais ao do autônomo, que é a o nível três. Porém, agora você tem o
+
+00:27:36
+gerenciamento dos funcionários, tá?Então, o salário deles é 1300 por mês,pago a cada 30 dias. Os encargos, eles são 70% sobre o salário pago a cada 30 dias. Então, quer dizer, você paga 1300 pro empregado, 70% disso você paga pro governo. Quer dizer, tá bom, né? E aí é o seguinte, o funcionário recebe uma comissão de 5% do valor do frete e você recebe 30% do valor do frete informado
+
+00:28:11
+ali no jogo, tá? E aí você paga as despesas dele de viagem e de estadia em viagem e alimentação, tá bom? Você vai simular isso daí e vai pagar. No caso de multa, ele ele vai pagar, né? Só que o o jogo não tem como fazer isso.
+
+00:28:30
+Bom, essas são as regras dos quatro níveis.Que coisa, hein? Bom, vamos lá. Agora vamos falar um pouquinho da gam play,pessoal. [limpando a garganta] Pensando lá no nível um. Então, por exemplo, assim, pessoal, eu a minha base era em São Diego, tá? San Diego. Então,assim, na segunda-feira,eh, eu ia pegar a primeira carga da
+
+00:28:54
+empresa que aparecesse. Eu não vou escolher carga, pessoal, é a primeira carga. Então, nesse caso aqui, ó, eu pegaria a de São Diego para Mojve. Aí tem um detalhe, regrinha, pessoal,detalhe.
+
+00:29:09
+Se o caminão é velho das gerações um e dois, é o caminão manual. Caminões da geração três, que são os mais novos, daí são automatizados. Por exemplo, essa carga rápida que eu tô fazendo, que é um Volvo novo, ele é automatizado. Eu tô eu tô tranquilo.
+
+00:29:27
+Outra regra importante, pessoal, se o camião tem GPS,você usa o GPS do camião sem áudio. Sem áudio.
+
+00:29:37
+Se você, se o camião não tem GPS, você vai no mapa mesmo. E aí tem um detalhe,pessoal. Você não acessa o mapa enquanto o camião tá rodando, tá? Enquanto o camião tá rodando, você não acessa mapa,você não acessa a câmera dois, só joga na câmera um. Tem isso também. E aí é o seguinte, puxa, fiquei em dúvida, me perdi. Você para o caminão e aí acessa o mapa para você ver, entendeu?
+
+00:30:06
+Ah,mas como é que eu vou acessar o mapa restante, se eu se eu não não posso fazer com ele rodando? Então você vai parar ou no começo da viagem você faz o trajeto na tua cabeça, anota no caderno,primeira esquerda, primeira direita, não sei o quê, e segue o caminho. Pessoal,vou falar para vocês que dá uma emoção a mais. Você não tem GPS. É um negócio
+
+00:30:30
+maluco, maluco mesmo, porque você tem que realmente se orientar pelas placas,pessoal. É um negócio muito doido, muito doido. Bom, vamos imaginar o seguinte,ó. Esse trajeto aqui, ó, ele é 4 horas,tá vendo, ó? Ó, ele vai dar mais ou menos 4 horas. Então, vamos supor que fosse segunda de manhã, beleza? 7 horas eu saí da empresa, às 11 da manhã eu cheguei no destino, 2 horas de descarga.
+
+00:30:56
+Nessas 2 horas eu já aproveitei o almocei.Como eu tô com uma carga rápida,pessoal, eu não tenho como retornar o como o jogo pede, né? O como a campanha pede. Então, o que que eu faço?
+
+00:31:09
+Eu conto essas 4 horas de retorno.Então, tá. Então, vamos de novo, ó. 7 horas eu saí da empresa, cheguei às 11,às 13 eu saí de lá porque eu almocei nesse período das 2 horas de descarga,mas 4 horas de retorno, eu cheguei às 5 na empresa. Chegando às 5 na empresa,meu turno acabou. Eu só vou começar no dia seguinte. Aí que você entra com os comandinhos de avançar tempo ou
+
+00:31:36
+avançando pelo teu caminão lá que tá parado em algum lugar. Entenderam?Você vai avançar para quando?Terça-feira às 7 da manhã. Se eu voltei pra minha base, a janta é por minha conta, a estadia é por minha conta.
+
+00:31:56
+Durante o trajeto, o almoço foi por conta da empresa. O café da manhã de segunda-feira de manhã era por minha conta. O café da manhã de terça-feira é por minha conta. Na terça-feira eu volto aqui na empresa e eu falo: "Ah, eu vou pegar outra carga".
+
+00:32:14
+Ah, nossa, a única carga disponível é uma carga lá para Ro Fals. É uma carga longa. Beleza, pega ela e vai. Vai quantos? respeitando as paradas e tudo certinho, não importa quantos dias demorem. Chegou lá, você obviamente contabiliza teus ganhos e tal e aí você chegou em Rofals. Quando você chegar lá,aí você precisa usar o logistic map aqui, porque daí você vai selecionar a
+
+00:32:42
+tua empresa, na minha, no meu caso é Plaster Sons e você vai selecionar Idaho Fals. Idaho Falls tem uma plaster sons. Olha só que legal.
+
+00:32:55
+tem. Então, chegando lá, respeitando as duas horas de o intervalo de descanso e as duas horas de descarga, você já pode pegar uma outra carga lá para um outro destino. Então, nesse caso aqui, ó,vamos pegar em R false plaster sons aqui. Opa, ó, tem uma carga pra bo.
+
+00:33:17
+Então beleza.Se você chegar no final do dia que você já tem que descansar, avança o tempo pro dia seguinte. Lembra que o teu turno é das 7 às 6 da tarde. Então, nesse turno você vai trabalhar, depois você vai descansar.
+
+00:33:37
+Então, chegou perto do final do turno,vai pro hotel e aí avança o pro dia seguinte, 7 horas da manhã começa começa de novo, seleciona a carga naquela cidade se tem e e segue adiante. Se não tivesse plaster sons aqui, pessoal, você teria que achar através lá do do mapa logístico qual é a cidade mais próxima,vê a distância que dá e quanto tempo demoraria para você se deslocar e avança
+
+00:34:07
+esse tempo para você considerar o deslocamento, tá beleza? Confuso pouquinho, né? Mas devagar você vai pegando o jeito. Nessa primeira fase, pessoal, na fase dois,que você tiver caminhão e você chegar numa numa cidade que não tem a tua empresa, você tem que achar uma empresa próxima e ir rodando vazio para lá,
+
+00:34:37
+respeitando as paradas de descanso e tudo mais. Sacaram?Legal, né? Legal, legal. E aí depois o nível três, aí você já tá livre, você pode transportar e só fazer o gerenciamento da grana que você vai receber e gerenciar cansaço, esse tipo de coisa. Nível três e nível 4 já tá mais próximo do que é o jogo agora.
+
+00:35:00
+Então, nível um e dois, ele dá bem mais trabalho. Reforçando, pessoal, nível dois, se você pega uma carga e chega numa determinada cidade e a tua empresa não existe naquela cidade, você tem que achar uma cidade próxima e ir andando.
+
+00:35:16
+Você vai rodando com o caminão vazio até lá, tá entendido?Bom, beleza.Eu acho que eu passei tudo. É bem complexo, pessoal. Mas, ó, você vai precisar de um caderno para anotar tudo que você precisa. Ah, um detalhe importante que eu não mencionei, você começa com um saldo de $5.000 ou 5.000€ tá? Para você começar. Então, para vocês
+
+00:35:44
+terem uma ideia, pessoal, a minha campanha do ATS, eu estou no dia 14 e o meu saldo em conta é de 77.786.Eu joguei 14 dias no jogo e eu acumulei 2.786 apenas.
+
+00:36:05
+É,é, pessoal, é, é difícil, é difícil, é difícil.>> [limpando a garganta] >> Na minha campanha do ETS2, eu já tô no nível dois porque eu já consegui comprar um primeiro caminhão lá. Eu estou assim,ó. Eu estou no na semana, no final da semana 5, pessoal, eu tô com 22.215€ na minha conta e a dívida do caminão,
+
+00:36:35
+obviamente. Eu, você quer ver, eu dei acho que 6.000 1000 de entrada. Eu dei 6.000 de entrada e financiei o resto do caminão. E agora eu tô batalhando aí para pagar ele. Detalhe, eu comprei um caminão usado com mais de 900.000 km e agora ele começou a dar problema. Eu tô tendo que gastar com manutenção. A minha última,meu último gasto com manutenção foram os
+
+00:37:01
+pneus. Tive que trocar os pneus traseiros e dianteiros.Foi mais, foi quase 5.000 euros só em pneu, pessoal. Para você ganhar 5.000€ pessoal, você tem que remar, gente. Remar, remar mesmo. Para vocês terem uma ideia, eu saí de Múrcia e fui pr pra Sevilha e receber 2300 €. Para você ter uma ideia, eu fui de Valeadoli para Limoneges, que é um
+
+00:37:30
+trajeto longo, ganhei 2.343 €. Isso bruto, sem sem falar de do consumo de combustível, né? Isso só bruto.
+
+00:37:41
+Beleza, pessoal? Eh, é isso. Campanha realista. Você que tá cansado de jogar ETS2 e ATS, vai mudar completamente a tua vida. Eu aconselho a vocês irem anotando,dá pause no vídeo, reassiste o vídeo,pega todos os detalhes, vai reanotando e se tiver dúvidas me escreva aqui que eu vou ajudar vocês aí a compor a campanha realista de vocês, beleza?
+
+00:38:12
+Abraço para vocês. Eu vou ficando por aqui.Fui.
