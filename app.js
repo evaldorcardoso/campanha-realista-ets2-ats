@@ -9,8 +9,8 @@ const STORAGE_KEY = 'realistic_campaign_app';
 const THEME_KEY = 'realistic_campaign_theme';
 const CONFIG_KEY = 'realistic_campaign_config';
 
-const APP_VERSION = '1.0.0';
-const APP_VERSION_DATE = '2026-08-06';
+const APP_VERSION = '1.0.1';
+const APP_VERSION_DATE = '2026-08-07';
 
 const CONST = {
   weekdays: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
