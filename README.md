@@ -35,6 +35,10 @@ As regras completas (setup do jogo, comandos de console, custos, tombamentos, fi
 - Sem build, sem frameworks, sem backend, sem dependências locais.
 - É um **PWA** (manifest + service worker): pode ser instalado no navegador/celular e funciona offline.
 
+## Versão online
+
+Uma versão funcional está disponível em **[https://campanha-realista.netlify.app/](https://campanha-realista.netlify.app/)**.
+
 ## Como rodar
 
 O app é um PWA, então precisa ser servido via HTTP em `localhost` (o service worker **não** registra no protocolo `file://`):
