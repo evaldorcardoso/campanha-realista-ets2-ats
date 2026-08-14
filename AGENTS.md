@@ -19,7 +19,7 @@ Este app é o "caderno" de uma **Campanha Realista** para Euro Truck Simulator 2
 - `app.js` — toda a lógica (estado, renderização, eventos). Sem módulos/classes; script global.
 - `styles.css` — estilos custom (o resto vem do Bootstrap).
 - `manifest.webmanifest` — manifest do PWA (nome, ícones, cores, display standalone). Caminhos **relativos** (`./`) porque o app pode ser servido em subpasta (ex.: GitHub Pages). Ao mudar ícones/cores, editar aqui e no `index.html` (`theme-color`, `apple-touch-icon`).
-- `sw.js` — service worker. Precache do app shell + Bootstrap CDN (`cdn.jsdelivr.net`), estratégia cache-first com fallback de rede. `CACHE_VERSION` (prefixo `campanha-realista-vN`) deve ser incrementado ao mudar arquivos cached para forçar update. **Não registra em `file://`** — testar via `npx serve .` em `http://localhost:3000`.
+- `sw.js` — service worker. Precache do app shell + Bootstrap CDN (`cdn.jsdelivr.net`), estratégia cache-first com fallback de rede. `CACHE_VERSION` (prefixo `campanha-realista-vN`) deve ser incrementado ao mudar arquivos cached para forçar update. **Não registra em `file://`** — testar via `npx serve .` em `http://localhost:3000`. Ao subir nova versão no Netlify (prod), **relembrar** de incrementar `CACHE_VERSION` também (sw.js) para forçar atualização do cache dos usuários PWA.
 - `icon-192.png` / `icon-512.png` — ícones do PWA (PNG). Regenerar via `gen-icons.ps1` (PowerShell + System.Drawing) se precisar mudar o logo.
 - `campanha_realista_regras.md` — fonte da verdade das regras (derivada de `youtube_transcription.txt`). **Ao alterar regras, manter em sincronia** com o conteúdo renderizado em `renderRules()` no `app.js`.
 
