@@ -9,7 +9,7 @@ const STORAGE_KEY = 'realistic_campaign_app';
 const THEME_KEY = 'realistic_campaign_theme';
 const CONFIG_KEY = 'realistic_campaign_config';
 
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.0.3';
 const APP_VERSION_DATE = '2026-08-14';
 
 const CONST = {
@@ -812,7 +812,7 @@ function renderActions() {
     html += '<button class="btn btn-danger" data-act="payEmployees">👥 Pagar funcionários (' + t.count + '): ' + money(p, t.total) + ' (salário ' + money(p, t.salary) + ' + encargos ' + money(p, t.charges) + ')</button>';
   }
   if (insDue) html += '<button class="btn btn-danger" data-act="insurance">🛡 Pagar seguro ATS (' + money(p, cfg.insuranceAts) + ')</button>';
-  html += '<button class="btn btn-primary" data-act="cargo">🚛 Registrar nova carga</button>';
+  if (!isInTransit(p)) html += '<button class="btn btn-primary" data-act="cargo">🚛 Registrar nova carga</button>';
   if (activeCargos.length) {
     activeCargos.forEach(c => {
       html += '<button class="btn btn-outline-success" data-act="deliver-' + c.id + '">✅ Entregar: ' + c.from + ' → ' + c.to + ' (' + money(p, c.commission) + ')</button>';
@@ -910,33 +910,40 @@ function renderCargo() {
   const p = currentProfile();
   if (!p) {
     panel.innerHTML = '<p class="text-muted small p-3 mb-0">—</p>';
+    const btn0 = document.getElementById('btnNewLoad');
+    if (btn0) btn0.style.display = 'none';
     return;
   }
   if (p.cargo.length === 0) {
     panel.innerHTML = '<p class="text-muted small p-3 mb-0">Nenhuma carga registrada.</p>';
+    const btn0 = document.getElementById('btnNewLoad');
+    if (btn0) btn0.style.display = '';
     return;
   }
-  panel.innerHTML = p.cargo.map(c => {
+panel.innerHTML = p.cargo.map(c => {
     const active = c.status === 'active';
     const driverName = c.driver && c.driver !== 'player'
       ? (p.employees.find(e => e.id === c.driver) || {}).name || 'Funcionário'
       : 'Você';
     return '<div class="entry-row">' +
       '<div class="d-flex justify-content-between align-items-center">' +
-        '<div>' +
-          '<div class="fw-semibold">' + c.from + ' → ' + c.to +
-            (active ? ' <span class="badge text-bg-warning">em andamento</span>' : ' <span class="badge text-bg-success">entregue</span>') +
-          '</div>' +
-          '<small class="text-muted">Motorista: ' + driverName + ' · Frete ' + money(p, c.freight) + ' · sua comissão ' + c.pct + '% = ' + money(p, c.commission) +
-          (c.employeeCommission ? ' · func. 5% = ' + money(p, c.employeeCommission) : '') +
-          (c.distance ? ' · ' + c.distance + ' km' : '') +
-          (c.deliveredDay ? ' · entregue no dia ' + c.deliveredDay : ' · iniciada no dia ' + c.day) +
-          '</small>' +
+      '<div>' +
+        '<div class="fw-semibold">' + c.from + ' → ' + c.to +
+          (active ? ' <span class="badge text-bg-warning">em andamento</span>' : ' <span class="badge text-bg-success">entregue</span>') +
         '</div>' +
-        (active ? '<button class="btn btn-sm btn-outline-success" data-act="deliver-' + c.id + '">Entregar</button>' : '') +
+        '<small class="text-muted">Motorista: ' + driverName + ' · Frete ' + money(p, c.freight) + ' · sua comissão ' + c.pct + '% = ' + money(p, c.commission) +
+        (c.employeeCommission ? ' · func. 5% = ' + money(p, c.employeeCommission) : '') +
+        (c.distance ? ' · ' + c.distance + ' km' : '') +
+        (c.deliveredDay ? ' · entregue no dia ' + c.deliveredDay : ' · iniciada no dia ' + c.day) +
+        '</small>' +
       '</div>' +
+      (active ? '<button class="btn btn-sm btn-outline-success" data-act="deliver-' + c.id + '">Entregar</button>' : '') +
     '</div>';
   }).join('');
+
+  const hasActivePlayerCargo = p.cargo.some(c => c.status === 'active' && c.driver === 'player');
+  const btn = document.getElementById('btnNewLoad');
+  if (btn) btn.style.display = hasActivePlayerCargo ? 'none' : '';
 }
 
 /* ---------------- Render: funcionários ---------------- */
@@ -1342,7 +1349,7 @@ document.getElementById('btnDeleteProfile').addEventListener('click', () => {
 function openCargoModal() {
   const p = currentProfile();
   if (!p) return;
-  populateCitySelect(document.getElementById('cgFrom'), p.currentCity || p.baseCity || '', p.game);
+  populateCitySelect(document.getElementById('cgFrom'), p.currentCity || '', p.game);
   populateCitySelect(document.getElementById('cgTo'), '', p.game);
   document.getElementById('cgDist').value = '';
   document.getElementById('cgFreight').value = '';
