@@ -9,8 +9,8 @@ const STORAGE_KEY = 'realistic_campaign_app';
 const THEME_KEY = 'realistic_campaign_theme';
 const CONFIG_KEY = 'realistic_campaign_config';
 
-const APP_VERSION = '1.0.1';
-const APP_VERSION_DATE = '2026-08-07';
+const APP_VERSION = '1.0.2';
+const APP_VERSION_DATE = '2026-08-14';
 
 const CONST = {
   weekdays: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
@@ -667,15 +667,18 @@ function nextEvent(p) {
     }
   });
 
-  const restAt = p.level <= 2 ? cfg.turno.employeeEndHour * 60 : cfg.turno.freeRestHour * 60;
-  if (now < restAt) {
-    cand.push({ at: restAt, label: 'Descanso / fim de turno (' + fmtMin(restAt) + ')' });
+  if (dailyStepDone(p, 'lodging')) {
+    cand.push({ at: 24 * 60 + cfg.lodging.nextDayHour * 60, label: 'Dormir — amanhã às ' + fmtMin(cfg.lodging.nextDayHour * 60) });
   } else {
-    cand.push({ at: now, label: 'Descanso — registre a estadia e durma' });
-  }
-
-  if (p.level <= 2) {
-    cand.push({ at: 24 * 60 + cfg.turno.startHour * 60, label: 'Início de turno (amanhã ' + fmtMin(cfg.turno.startHour * 60) + ')' });
+    const restAt = p.level <= 2 ? cfg.turno.employeeEndHour * 60 : cfg.turno.freeRestHour * 60;
+    if (now < restAt) {
+      cand.push({ at: restAt, label: 'Descanso / fim de turno (' + fmtMin(restAt) + ')' });
+    } else {
+      cand.push({ at: now, label: 'Descanso — registre a estadia e durma' });
+    }
+    if (p.level <= 2) {
+      cand.push({ at: 24 * 60 + cfg.turno.startHour * 60, label: 'Início de turno (amanhã ' + fmtMin(cfg.turno.startHour * 60) + ')' });
+    }
   }
 
   cand.sort((a, b) => a.at - b.at);
@@ -688,6 +691,10 @@ function suggestAction(p) {
 
   if (!p.baseCity || !p.company) {
     return { text: 'Configure a campanha: escolha cidade-base e empresa nas Configurações.' };
+  }
+
+  if (!nextDailyStep(p)) {
+    return { text: 'Tudo registrado hoje (café, almoço, jantar e estadia). Toque em <strong>Dormir / próximo dia</strong> para avançar até ' + fmtMin(cfg.lodging.nextDayHour * 60) + ' amanhã.' };
   }
 
   if (p.level <= 2 && now >= cfg.turno.employeeEndHour * 60) {
@@ -790,6 +797,13 @@ function renderActions() {
       (enabled ? '' : ' disabled') + '>' + s.icon + ' ' + s.label + '<br><small>' + s.cost + '</small></button>';
   });
   html += '</div>';
+
+  if (nextStep === null) {
+    html += '<div class="d-grid gap-2 mb-3">' +
+      '<button class="btn btn-info" data-act="sleep">🌙 Dormir / próximo dia' +
+      '<small class="d-block">Estadia já registrada — avança para amanhã às ' + fmtMin(cfg.lodging.nextDayHour * 60) + ' sem novo débito.</small></button>' +
+    '</div>';
+  }
 
   html += '<div class="d-grid gap-2">';
   if (salaryDue) html += '<button class="btn btn-success" data-act="salary">💰 Receber salário (' + money(p, cfg.salary[p.level]) + ')</button>';
@@ -1143,6 +1157,22 @@ function handleAction(act) {
 
   if (act === 'time') { openTimeModal(); return; }
   if (act === 'level') { openLevelModal(); return; }
+  if (act === 'sleep') {
+    if (!nextDailyStep(p)) {
+      const fromDay = p.day;
+      const fromWeekday = p.weekday;
+      confirmModal('Dormir / próximo dia',
+        'Estadia já registrada hoje. Avançar direto para <strong>amanhã às ' + fmtMin(cfg.lodging.nextDayHour * 60) + '</strong>? Sem novo débito.',
+        () => {
+          pushUndo();
+          fromAbs(p, (Math.floor(toAbs(p) / 1440) + 1) * 1440 + cfg.lodging.nextDayHour * 60);
+          saveState();
+          advanceDayFlow(p, 'g_set_time ' + p.hour + (p.minute ? ' ' + p.minute : ''), fromDay, fromDay + 1, fromWeekday);
+        },
+        { time: false });
+    }
+    return;
+  }
   if (act === 'salary') {
     confirmModal('Receber salário', 'Receber ' + money(p, cfg.salary[p.level]) + ' referente ao dia ' + cfg.salaryDay + '?', () => actionSalary(p), { time: true });
     return;
