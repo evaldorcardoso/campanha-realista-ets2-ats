@@ -217,9 +217,10 @@
                 <div class="row g-2 mb-3">
                   <div class="col">
                     <label class="form-label">Cidade-base</label>
-                    <select class="form-select" id="cfgCity">
-                      <option value="">— selecionar —</option>
-                    </select>
+                    <div class="city-combo">
+                      <input type="text" class="form-control city-combo-input" id="cfgCity" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                      <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+                    </div>
                   </div>
                   <div class="col">
                     <label class="form-label">Empresa</label>
@@ -514,11 +515,17 @@
           <div class="row g-2 mb-3">
             <div class="col">
               <label class="form-label">Origem</label>
-              <select class="form-select" id="cgFrom"><option value="">—</option></select>
+              <div class="city-combo">
+                <input type="text" class="form-control city-combo-input" id="cgFrom" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+              </div>
             </div>
             <div class="col">
               <label class="form-label">Destino</label>
-              <select class="form-select" id="cgTo"><option value="">—</option></select>
+              <div class="city-combo">
+                <input type="text" class="form-control city-combo-input" id="cgTo" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+              </div>
             </div>
           </div>
           <div class="row g-2 mb-3">
@@ -556,11 +563,17 @@
         <div class="modal-body">
           <div class="mb-3">
             <label class="form-label">Origem</label>
-            <select class="form-select" id="rpFrom" disabled><option value="">—</option></select>
+            <div class="city-combo">
+              <input type="text" class="form-control city-combo-input" id="rpFrom" disabled placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+              <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+            </div>
           </div>
           <div class="mb-3">
             <label class="form-label">Destino</label>
-            <select class="form-select" id="rpTo"><option value="">— selecionar —</option></select>
+            <div class="city-combo">
+              <input type="text" class="form-control city-combo-input" id="rpTo" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+              <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+            </div>
           </div>
           <div class="row g-2 mb-3">
             <div class="col">
@@ -619,7 +632,10 @@
             </div>
             <div class="col">
               <label class="form-label">Cidade onde ocorreu (opcional)</label>
-              <select class="form-select" id="exCity"><option value="">—</option></select>
+              <div class="city-combo">
+                <input type="text" class="form-control city-combo-input" id="exCity" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+              </div>
             </div>
           </div>
           <div class="alert alert-light border small mb-0" id="exHint"></div>
@@ -711,7 +727,10 @@
           </div>
           <div class="mt-3 d-none" id="cfCityWrap">
             <label class="form-label small">Cidade onde ocorreu (opcional)</label>
-            <select class="form-select" id="cfCity"></select>
+            <div class="city-combo">
+              <input type="text" class="form-control city-combo-input" id="cfCity" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+              <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+            </div>
           </div>
         </div>
         <div class="modal-footer">

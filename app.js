@@ -255,6 +255,11 @@ function addEntry(p, { type, label, amount, note }) {
 
 function employerPaysMeals(p) { return p.level <= 2; }
 function employerPaysLodging(p) { return p.level <= 2; }
+function employerCoversExpense(p, typeId) {
+  if (typeId === 'toll') return p.level <= 2;
+  if (typeId === 'fuel' || typeId === 'maintenance') return p.level <= 1;
+  return false;
+}
 
 /* Comando + clipboard */
 
@@ -1482,7 +1487,11 @@ function fillExpenseModal() {
   document.getElementById('exDir').value = t.dir;
   const p = currentProfile();
   if (!p) return;
-  document.getElementById('exHint').textContent = expandNote(t.note, p);
+  let hint = expandNote(t.note, p);
+  if (t.dir === 'out' && employerCoversExpense(p, id)) {
+    hint += (hint ? ' ' : '') + 'Pago pelo empregador — não será debitado.';
+  }
+  document.getElementById('exHint').textContent = hint;
   let def = t.def;
   if (id === 'salary') def = cfg.salary[p.level] || 0;
   else if (id === 'tag') def = cfg.tag;
@@ -1513,6 +1522,8 @@ document.getElementById('btnSaveExpense').addEventListener('click', () => {
   const amountRaw = parseFloat(document.getElementById('exAmount').value);
   const magnitude = isNaN(amountRaw) ? 0 : Math.abs(amountRaw);
   const signed = dir === 'in' ? magnitude : -magnitude;
+  const covered = dir === 'out' && magnitude > 0 && employerCoversExpense(p, typeId);
+  const finalAmount = covered ? 0 : signed;
   const note = document.getElementById('exNote').value.trim();
   const city = document.getElementById('exCity').value.trim();
   const timeParts = String(document.getElementById('exTime').value || '').split(':');
@@ -1524,7 +1535,8 @@ document.getElementById('btnSaveExpense').addEventListener('click', () => {
     const tm = isNaN(parseInt(timeParts[1], 10)) ? 0 : Math.min(59, Math.max(0, parseInt(timeParts[1], 10)));
     applyActionTime(p, Math.min(23, Math.max(0, th)), tm, 0);
   }
-  addExpense(p, typeId, signed, note + (city ? ' · em ' + city : ''));
+  addExpense(p, typeId, finalAmount, note + (city ? ' · em ' + city : '') + (covered ? ' · pago pelo empregador (sem débito).' : ''));
+  if (covered) toast('Despesa paga pelo empregador — não foi debitada.', 'success');
 });
 
 /* ---------------- Resumo do dia ---------------- */
@@ -1951,18 +1963,173 @@ async function loadCities() {
   }
 }
 
-function cityOptions(game) {
-  const list = CITIES[game] || [];
-  return list.map(c =>
-    '<option value="' + escAttr(c.city) + '">' + escHtml(c.city) + (c.state ? ' — ' + escHtml(c.state) : '') + '</option>'
-  ).join('');
+/* ---------------- Combobox de cidade (busca) ----------------
+   Substitui os antigos <select> de cidade. Cada combobox é um
+   <div class="city-combo"> com um <input class="city-combo-input">
+   e um <ul class="city-combo-list">. O valor lido é o texto do input
+   (`.value`), então a lógica existente não muda. A lista filtra em
+   tempo real (sem acentos) e o blur restaura a última seleção válida
+   ou esvazia — sem texto livre, como o select nativo.
+*/
+
+function normSearch(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-function populateCitySelect(el, selectedValue, game) {
-  if (!el) return;
-  el.innerHTML = '<option value="">— selecionar —</option>' + cityOptions(game);
-  if (selectedValue) el.value = selectedValue;
+function comboOpts(inputEl) {
+  return inputEl._comboOpts || [];
 }
+
+function comboListEl(inputEl) {
+  const w = inputEl.closest('.city-combo');
+  return w ? w.querySelector('.city-combo-list') : null;
+}
+
+function comboRender(inputEl) {
+  const ul = comboListEl(inputEl);
+  if (!ul) return;
+  const q = normSearch(inputEl.value);
+  const opts = comboOpts(inputEl);
+  let list;
+  if (!q) {
+    list = opts;
+  } else {
+    const starts = [];
+    const contains = [];
+    opts.forEach(o => {
+      const n = normSearch(o.label);
+      if (n.indexOf(q) === 0) starts.push(o);
+      else if (n.indexOf(q) > 0) contains.push(o);
+    });
+    list = starts.concat(contains);
+  }
+  if (list.length === 0) {
+    ul.innerHTML = '<li class="city-combo-empty">Nenhum resultado para “' + escHtml(inputEl.value) + '”</li>';
+  } else {
+    ul.innerHTML = list.map(o =>
+      '<li class="city-combo-opt" data-value="' + escAttr(o.value) + '">' + escHtml(o.label) + '</li>'
+    ).join('');
+  }
+  inputEl._comboIdx = -1;
+}
+
+function comboShow(inputEl) {
+  if (inputEl.disabled) return;
+  const ul = comboListEl(inputEl);
+  if (!ul) return;
+  comboRender(inputEl);
+  ul.classList.remove('d-none');
+  inputEl.setAttribute('aria-expanded', 'true');
+}
+
+function comboHide(inputEl) {
+  const ul = comboListEl(inputEl);
+  if (ul) ul.classList.add('d-none');
+  inputEl.setAttribute('aria-expanded', 'false');
+  inputEl._comboIdx = -1;
+}
+
+function comboCloseOthers(inputEl) {
+  document.querySelectorAll('.city-combo-input').forEach(el => {
+    if (el !== inputEl) comboHide(el);
+  });
+}
+
+function comboCloseAll() {
+  document.querySelectorAll('.city-combo-input').forEach(comboHide);
+}
+
+function comboSelect(inputEl, optEl) {
+  const value = optEl.getAttribute('data-value');
+  inputEl.value = value;
+  inputEl._comboVal = value;
+  comboHide(inputEl);
+}
+
+function populateCitySelect(inputEl, selectedValue, game) {
+  if (!inputEl) return;
+  const list = CITIES[game] || [];
+  inputEl._comboOpts = list.map(c => ({
+    value: c.city,
+    label: c.city + (c.state ? ' — ' + c.state : '')
+  }));
+  inputEl._comboVal = selectedValue || '';
+  inputEl.value = selectedValue || '';
+  comboHide(inputEl);
+}
+
+document.addEventListener('focusin', (ev) => {
+  const inputEl = ev.target.closest && ev.target.closest('.city-combo-input');
+  if (!inputEl) { comboCloseAll(); return; }
+  comboCloseOthers(inputEl);
+  comboShow(inputEl);
+});
+
+document.addEventListener('input', (ev) => {
+  const inputEl = ev.target.closest && ev.target.closest('.city-combo-input');
+  if (inputEl) comboShow(inputEl);
+});
+
+document.addEventListener('blur', (ev) => {
+  const inputEl = ev.target.closest && ev.target.closest('.city-combo-input');
+  if (!inputEl) return;
+  const valid = comboOpts(inputEl).some(o => o.value === inputEl.value.trim());
+  if (!valid) inputEl.value = inputEl._comboVal || '';
+  comboHide(inputEl);
+}, true);
+
+document.addEventListener('mousedown', (ev) => {
+  if (ev.target.closest && ev.target.closest('.city-combo-list')) ev.preventDefault();
+});
+
+document.addEventListener('click', (ev) => {
+  const li = ev.target.closest && ev.target.closest('.city-combo-opt');
+  if (li) {
+    const inputEl = li.closest('.city-combo') && li.closest('.city-combo').querySelector('.city-combo-input');
+    if (inputEl) comboSelect(inputEl, li);
+    return;
+  }
+  if (ev.target.closest && ev.target.closest('.city-combo')) {
+    const inputEl = ev.target.closest('.city-combo-input');
+    if (inputEl) comboShow(inputEl);
+    return;
+  }
+  comboCloseAll();
+});
+
+document.addEventListener('keydown', (ev) => {
+  const inputEl = ev.target.closest && ev.target.closest('.city-combo-input');
+  if (!inputEl) return;
+  const ul = comboListEl(inputEl);
+  if (ev.key === 'Escape') { comboHide(inputEl); return; }
+  if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+    if (!ul || ul.classList.contains('d-none')) { comboShow(inputEl); return; }
+    const items = Array.prototype.slice.call(ul.querySelectorAll('.city-combo-opt'));
+    if (items.length === 0) return;
+    ev.preventDefault();
+    let idx = inputEl._comboIdx === undefined ? -1 : inputEl._comboIdx;
+    idx = ev.key === 'ArrowDown' ? Math.min(items.length - 1, idx + 1) : Math.max(0, idx - 1);
+    inputEl._comboIdx = idx;
+    items.forEach((li, i) => li.classList.toggle('active', i === idx));
+    if (items[idx]) items[idx].scrollIntoView({ block: 'nearest' });
+    return;
+  }
+  if (ev.key === 'Enter') {
+    if (!ul || ul.classList.contains('d-none')) return;
+    const items = ul.querySelectorAll('.city-combo-opt');
+    const idx = inputEl._comboIdx;
+    if (idx >= 0 && items[idx]) {
+      ev.preventDefault();
+      comboSelect(inputEl, items[idx]);
+    }
+    return;
+  }
+  if (ev.key === 'Tab') comboHide(inputEl);
+});
+
+document.querySelectorAll('.modal').forEach(m => {
+  m.addEventListener('hidden.bs.modal', comboCloseAll);
+});
 
 /* ---------------- Empresas (lista da wiki) ---------------- */
 
