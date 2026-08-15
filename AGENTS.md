@@ -17,7 +17,7 @@ Este app é o "caderno" de uma **Campanha Realista** para Euro Truck Simulator 2
 
 - `index.html` — toda a estrutura da SPA (abas, modais, toasts). Único arquivo HTML.
 - `app.js` — toda a lógica (estado, renderização, eventos). Sem módulos/classes; script global.
-- `version.js` — **versão única do app** (`APP_VERSION`, `APP_VERSION_DATE`), carregado antes de `app.js` e importado pelo `sw.js` via `importScripts`. Ao publicar mudanças, incrementar `APP_VERSION` AQUI — é a única linha a editar.
+- `version.js` — **versão única do app** (`APP_VERSION`, `APP_VERSION_DATE`) + **changelog** (`APP_CHANGELOG`, mais recente primeiro), carregado antes de `app.js` e importado pelo `sw.js` via `importScripts`. Ao publicar mudanças, incrementar `APP_VERSION` AQUI **e adicionar a entrada correspondente no topo de `APP_CHANGELOG`** — essas são as únicas linhas a editar.
 - `styles.css` — estilos custom (o resto vem do Bootstrap).
 - `manifest.webmanifest` — manifest do PWA (nome, ícones, cores, display standalone). Caminhos **relativos** (`./`) porque o app pode ser servido em subpasta (ex.: GitHub Pages). Ao mudar ícones/cores, editar aqui e no `index.html` (`theme-color`, `apple-touch-icon`).
 - `sw.js` — service worker. Precache do app shell + Bootstrap CDN (`cdn.jsdelivr.net`), estratégia cache-first com fallback de rede. O nome do cache é derivado de `version.js` (`'campanha-realista-v' + APP_VERSION`) — **não há constante separada**: bump de versão = bump do cache. **Não registra em `file://`** — testar via `npx serve .` em `http://localhost:3000`. Ao subir nova versão no Netlify (prod), **relembrar** de incrementar `APP_VERSION` em `version.js` para forçar atualização do cache dos usuários PWA.
@@ -27,7 +27,9 @@ Este app é o "caderno" de uma **Campanha Realista** para Euro Truck Simulator 2
 ## Regras do código que um agente provavelmente erraria
 
 - **Idioma:** UI e números em **pt-BR** (`toLocaleString('pt-BR')`). Moeda `$` (ATS) ou `€` (ETS2). Mantenha texto de UI em português.
-- **Persistência:** tudo em `localStorage` (sem backend). Chaves: `realistic_campaign_app` (perfis/estado), `realistic_campaign_config` (configs), `realistic_campaign_theme`, `realistic_campaign_active_tab`.
+- **Persistência:** tudo em `localStorage` (sem backend). Chaves: `realistic_campaign_app` (perfis/estado), `realistic_campaign_config` (configs), `realistic_campaign_theme`, `realistic_campaign_active_tab`, `realistic_campaign_seen_version` (última versão vista — controla o modal de changelog; só o botão Ok marca como vista).
+- **Changelog:** o modal `modalChangelog` (`openChangelog(automatic)`) abre no init quando `APP_VERSION` ≠ `realistic_campaign_seen_version` e ao clicar na versão da navbar (`#appVersion`). Conteúdo vem de `APP_CHANGELOG` (ordenação decrescente em `sortVersionsDesc`).
+- **Nova versão (release):** ao gerar uma nova versão, **validar obrigatoriamente** que existe uma entrada em `APP_CHANGELOG` correspondente à nova `APP_VERSION` e que ela contém **pelo menos 1 item** em `changes[]` (descrevendo as mudanças reais da versão). Sem changelog para a versão nova, **não publicar** — bump de `APP_VERSION` sem entrada de changelog é considerado erro.
 - **Config global:** valores padrão ficam em `DEFAULT_CONFIG` (`app.js:19`) e são clonados/sanitizados por `sanitizeConfig()`. A aba "Configurações" edita o mesmo objeto `cfg` — mudar a UI exige manter os ids `cfg-*` e o mapeamento em `fillConfigForm()`/`saveConfigForm()`.
 - **Renderização por string:** `renderAll()` reconstrói o DOM via `innerHTML` e chama `bindActionButtons()` de novo — handlers NÃO devem ser anexados fora do render, ou serão perdidos ao re-renderizar. Botões usam `data-act` e são roteados por `handleAction()`.
 - **Comandos do console:** avançar tempo/hora gera e copia automaticamente o comando `g_set_time` para o clipboard (função `emitTimeCmd`/`setCommand`).

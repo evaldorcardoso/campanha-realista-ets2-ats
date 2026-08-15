@@ -31,6 +31,9 @@
         <button class="btn btn-outline-secondary btn-lg px-4" id="btnStartSetup">🎮 Setup do jogo</button>
         <button class="btn btn-outline-secondary btn-lg px-4" id="btnStartConfig">⚙️ Configurações</button>
       </div>
+      <div class="text-center mt-4">
+        <button type="button" class="btn btn-link btn-sm p-0 text-secondary" id="startAppVersion" title="Ver changelog" style="text-decoration:none"></button>
+      </div>
     </div>
   </section>
 
@@ -38,7 +41,7 @@
   <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">&#128663; Campanha Realista</a><span class="navbar-text small text-secondary ms-2 d-none d-lg-inline" id="appVersion"></span>
+      <a class="navbar-brand fw-bold" href="#">&#128663; Campanha Realista</a><button type="button" class="navbar-text small text-secondary ms-2 d-none d-lg-inline p-0 border-0 bg-transparent" id="appVersion" title="Ver changelog" style="cursor:pointer"></button>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Menu">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -785,6 +788,22 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CHANGELOG -->
+  <div class="modal fade" id="modalChangelog" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="chgTitle">Changelog</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="chgBody"></div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" id="btnChangelogOk">Ok</button>
         </div>
       </div>
     </div>

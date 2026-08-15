@@ -8,6 +8,7 @@
 const STORAGE_KEY = 'realistic_campaign_app';
 const THEME_KEY = 'realistic_campaign_theme';
 const CONFIG_KEY = 'realistic_campaign_config';
+const SEEN_VERSION_KEY = 'realistic_campaign_seen_version';
 
 const CONST = {
   weekdays: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
@@ -309,6 +310,55 @@ async function copyText(text) {
       return ok;
     } catch (e2) { return false; }
   }
+}
+
+/* ---------------- Changelog ----------------
+   O changelog é mantido em version.js (APP_CHANGELOG, mais recente primeiro).
+   O modal abre automaticamente quando APP_VERSION muda e ao clicar na versão (navbar).
+   Só o botão Ok marca a versão como vista — fechar pelo X reabre no próximo load. */
+
+function getSeenVersion() {
+  try { return localStorage.getItem(SEEN_VERSION_KEY) || ''; } catch (e) { return ''; }
+}
+
+function setSeenVersion() {
+  try { localStorage.setItem(SEEN_VERSION_KEY, APP_VERSION); } catch (e) { /* ignore */ }
+}
+
+function sortVersionsDesc(a, b) {
+  const pa = String(a.version).split('.').map(n => parseInt(n, 10) || 0);
+  const pb = String(b.version).split('.').map(n => parseInt(n, 10) || 0);
+  for (let i = 0; i < 3; i++) {
+    const d = (pb[i] || 0) - (pa[i] || 0);
+    if (d !== 0) return d;
+  }
+  return 0;
+}
+
+function renderChangelogHtml(highlightNewest) {
+  const list = (APP_CHANGELOG || []).slice().sort(sortVersionsDesc);
+  if (list.length === 0) return '<p class="text-muted mb-0">Nenhuma mudança registrada.</p>';
+  return list.map((item, i) => {
+    const isNew = highlightNewest && i === 0;
+    const head = '<div class="d-flex align-items-center gap-2">' +
+      '<strong>' + escapeHtml(item.version) + '</strong>' +
+      '<span class="text-muted small">' + escapeHtml(item.date) + '</span>' +
+      (isNew ? '<span class="badge text-bg-primary">novo</span>' : '') +
+    '</div>';
+    const changes = (item.changes || []).map(c => '<li>' + escapeHtml(c) + '</li>').join('');
+    return '<div class="changelog-item' + (isNew ? ' changelog-item--new' : '') + '">' +
+      head + '<ul class="mb-0 mt-1">' + changes + '</ul></div>';
+  }).join('');
+}
+
+function openChangelog(automatic) {
+  const title = document.getElementById('chgTitle');
+  if (title) title.textContent = automatic
+    ? '🚀 Atualizado para v' + APP_VERSION
+    : 'Changelog — v' + APP_VERSION;
+  const body = document.getElementById('chgBody');
+  if (body) body.innerHTML = renderChangelogHtml(!!automatic);
+  try { modal('Changelog').show(); } catch (e) { /* ignore */ }
 }
 
 /* ---------------- Toasts ---------------- */
@@ -1071,6 +1121,8 @@ function renderAll() {
   renderProfile();
   const navVer = document.getElementById('appVersion');
   if (navVer) navVer.textContent = 'v' + APP_VERSION;
+  const startVer = document.getElementById('startAppVersion');
+  if (startVer) startVer.textContent = 'v' + APP_VERSION + ' · ver changelog';
   bindActionButtons();
 }
 
@@ -2319,6 +2371,14 @@ restoreActiveTab();
 fillConfigForm();
 bindStartScreen();
 
+document.getElementById('btnChangelogOk').addEventListener('click', () => {
+  setSeenVersion();
+  try { modal('Changelog').hide(); } catch (e) { /* ignore */ }
+});
+
+document.getElementById('appVersion').addEventListener('click', () => openChangelog(false));
+document.getElementById('startAppVersion').addEventListener('click', () => openChangelog(false));
+
 document.getElementById('btnLogout').addEventListener('click', () => {
   pushUndo();
   state.activeProfileId = null;
@@ -2327,5 +2387,6 @@ document.getElementById('btnLogout').addEventListener('click', () => {
 });
 
 renderAll();
+if (getSeenVersion() !== APP_VERSION) openChangelog(true);
 loadCities().then(() => { renderAll(); fillProfileForm(); });
 loadCompanies().then(() => { renderAll(); fillProfileForm(); });

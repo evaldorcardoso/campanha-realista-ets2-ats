@@ -72,6 +72,7 @@ Tudo fica no **`localStorage`** do navegador, sem backend:
 | `realistic_campaign_config` | Configurações globais (valores e percentuais) |
 | `realistic_campaign_theme` | Tema claro/escuro |
 | `realistic_campaign_active_tab` | Aba ativa |
+| `realistic_campaign_seen_version` | Última versão do app vista (controla o modal de changelog) |
 
 Faça **backups** com o botão *Exportar JSON* na barra superior (o `localStorage` é específico do navegador/perfil).
 
@@ -89,7 +90,7 @@ Todos servem em HTTPS (necessário para o service worker).
 
 ```
 ├── index.html                  # SPA (abas, modais, toasts)
-├── version.js                  # Versão única do app (APP_VERSION)
+├── version.js                  # Versão única do app (APP_VERSION) + changelog (APP_CHANGELOG)
 ├── app.js                      # Lógica, estado, renderização e eventos
 ├── styles.css                  # Estilos custom (resto vem do Bootstrap)
 ├── manifest.webmanifest        # Manifest do PWA
