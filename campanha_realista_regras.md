@@ -61,7 +61,7 @@ Outras regras de setup:
 
 ### Nível 1 — Empregado
 
-Você é empregado de uma empresa. Caminhão, combustível, pedágio e despesas de viagem são da empresa.
+Você é empregado de uma empresa. Caminhão, combustível, pedágio, balsa/trem e despesas de viagem são da empresa.
 
 **Início da campanha:**
 - Escolher uma **cidade-base** (ex.: San Diego).
@@ -91,7 +91,7 @@ Você é empregado de uma empresa. Caminhão, combustível, pedágio e despesas 
 - Salário: **$1.300 / €1.300 por mês**, pago a cada **30 dias** (contar dia 1, 2, 3...; no dia 30 recebe).
 - Comissão: **5% do valor do frete**, recebida **na entrega** da carga.
 
-**Despesas cobertas pelo empregador:** pedágio, combustível, refeições e estadia em viagem.
+**Despesas cobertas pelo empregador:** pedágio, balsa/trem, combustível, refeições e estadia em viagem.
 
 **Regras operacionais:**
 - Cargas: **somente da sua empresa** (qualquer filial dela, em qualquer cidade).
@@ -119,6 +119,7 @@ Você continua empregado, mas agora com **caminhão próprio** (como agregado). 
 | Item | Quem paga |
 |---|---|
 | Pedágio | Empregador |
+| Balsa/Trem | Empregador |
 | Tag (pedágio automático) | **Jogador** — custa **$15 / €15 por país** |
 | Combustível | **Jogador** |
 | Estadia e refeições em trajeto | Empregador |
@@ -153,6 +154,7 @@ Você comprou um reboque e trabalha por conta própria.
 | Item | Quem paga |
 |---|---|
 | Pedágio | **Jogador** |
+| Balsa/Trem | **Jogador** |
 | Tag (por país) | **Jogador** — $15 / €15 por país |
 | Combustível | **Jogador** |
 | Estadia, refeições, manutenção | **Jogador** |

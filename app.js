@@ -114,6 +114,7 @@ const EXPENSE_TYPES = [
   { id: 'toll',        label: 'Pedágio',                     dir: 'out', def: 0,   note: 'Níveis 1–2: pago pelo empregador.' },
   { id: 'fuel',        label: 'Combustível',                 dir: 'out', def: 0,   note: 'Nível 1: empresa paga. Níveis 2–3: seu.' },
   { id: 'maintenance', label: 'Manutenção do caminhão',      dir: 'out', def: 0,   note: 'Nível 1: empresa paga. Níveis 2–3: seu.' },
+  { id: 'ferry',       label: 'Balsa / Trem',                dir: 'out', def: 0,   note: 'Níveis 1–2: pago pelo empregador.' },
   { id: 'tag',         label: 'Tag (pedágio automático)',    dir: 'out', def: 'tag', note: 'Custa {C}{TAG} por país. Nível 1: não se aplica.' },
   { id: 'fine',        label: 'Multa / infração',            dir: 'out', def: 0,   note: 'Sempre paga pelo jogador.' },
   { id: 'insurance',   label: 'Seguro ATS (a cada {SALARYDAY} dias)', dir: 'out', def: 'insurance', note: 'Somente ATS, nível 3+. ETS2 não tem.' },
@@ -256,7 +257,7 @@ function addEntry(p, { type, label, amount, note }) {
 function employerPaysMeals(p) { return p.level <= 2; }
 function employerPaysLodging(p) { return p.level <= 2; }
 function employerCoversExpense(p, typeId) {
-  if (typeId === 'toll') return p.level <= 2;
+  if (typeId === 'toll' || typeId === 'ferry') return p.level <= 2;
   if (typeId === 'fuel' || typeId === 'maintenance') return p.level <= 1;
   return false;
 }
@@ -1043,7 +1044,7 @@ function renderRules() {
       '<li>Tag: ' + m(cfg.tag) + ' por país · Seguro ATS: ' + m(cfg.insuranceAts) + '/' + cfg.salaryDay + ' dias</li>' +
       '</ul>',
     rulesNiveisBody: '<ul class="mb-0">' +
-      '<li><b>N1 Empregado:</b> salário ' + m(cfg.salary[1]) + '/mês · comissão ' + Math.round(cfg.commission[1] * 100) + '% · pedágio/combustível/refeições-em-viagem da empresa · demissão se tombar (+10 dias)</li>' +
+      '<li><b>N1 Empregado:</b> salário ' + m(cfg.salary[1]) + '/mês · comissão ' + Math.round(cfg.commission[1] * 100) + '% · pedágio/balsa-trem/combustível/refeições-em-viagem da empresa · demissão se tombar (+10 dias)</li>' +
       '<li><b>N2 Caminhão próprio:</b> salário ' + m(cfg.salary[2]) + '/mês · comissão ' + Math.round(cfg.commission[2] * 100) + '% · combustível e manutenção seus · tag ' + m(cfg.tag) + '/país · financiamento = valor +20% ÷ 12 meses</li>' +
       '<li><b>N3 Autônomo:</b> renda ' + Math.round(cfg.commission[3] * 100) + '% do frete · tudo por sua conta · acidente leve = 2 dias · tombamento = 30 dias · seguro ATS ' + m(cfg.insuranceAts) + '/' + cfg.salaryDay + ' dias</li>' +
       '<li><b>N4 Empresário:</b> regras N3 + você recebe ' + Math.round(cfg.commission[4] * 100) + '% do frete; funcionário: salário ' + m(cfg.employeeSalary) + ' + ' + Math.round(cfg.employeeChargesPct * 100) + '% de encargos a cada ' + cfg.salaryDay + ' dias, comissão ' + Math.round(cfg.employeeCommission * 100) + '% do frete, despesas de viagem por sua conta, multas por conta dele</li>' +
@@ -1492,6 +1493,8 @@ function fillExpenseModal() {
     hint += (hint ? ' ' : '') + 'Pago pelo empregador — não será debitado.';
   }
   document.getElementById('exHint').textContent = hint;
+  const cityLabel = document.getElementById('exCityLabel');
+  if (cityLabel) cityLabel.textContent = (id === 'ferry') ? 'Cidade de destino (opcional)' : 'Cidade onde ocorreu (opcional)';
   let def = t.def;
   if (id === 'salary') def = cfg.salary[p.level] || 0;
   else if (id === 'tag') def = cfg.tag;
