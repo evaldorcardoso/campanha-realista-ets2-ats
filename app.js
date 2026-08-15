@@ -409,6 +409,31 @@ function actionLodging(p) {
   afterTransaction(p, 'lodging');
 }
 
+function openQuickExpenseConfirm(p, typeId) {
+  const t = EXPENSE_TYPES.find(e => e.id === typeId);
+  if (!t) return;
+  const covered = employerCoversExpense(p, typeId);
+  confirmModal(t.label,
+    'Informe o valor de <strong>' + t.label + '</strong>:' +
+    (covered ? ' <small class="d-block text-muted">Pago pelo empregador — não será debitado (valor fica como referência).</small>' : ' <small class="d-block text-muted">Debitar do seu saldo.</small>') +
+    ' <small class="d-block text-muted">Dia ' + p.day + ', ' + pad2(p.hour) + ':' + pad2(p.minute || 0) + '</small>',
+    () => actionQuickExpense(p, typeId),
+    { time: true, amount: true, city: true });
+}
+
+function actionQuickExpense(p, typeId) {
+  const t = EXPENSE_TYPES.find(e => e.id === typeId);
+  if (!t) return;
+  const covered = employerCoversExpense(p, typeId);
+  const magnitude = pendingAmount > 0 ? pendingAmount : 0;
+  const amount = covered ? 0 : -magnitude;
+  let note = covered ? 'Pago pelo empregador (sem débito).' : 'Por sua conta.';
+  if (covered && magnitude) note += ' Valor informado: ' + money(p, magnitude);
+  if (pendingCity) note += ' · em ' + pendingCity;
+  addEntry(p, { type: typeId, label: t.label, amount, note });
+  afterTransaction(p, typeId);
+}
+
 function actionSalary(p) {
   const amount = cfg.salary[p.level] || 0;
   addEntry(p, { type: 'salary', label: 'Salário mensal', amount: amount, note: 'Pago a cada ' + cfg.salaryDay + ' dias.' });
@@ -603,6 +628,9 @@ function renderToday() {
   const inTransitBadge = isInTransit(p)
     ? '<span class="badge text-bg-warning"><span class="status-dot bg-dark me-1"></span>Em trajeto</span>'
     : '<span class="badge text-bg-secondary"><span class="status-dot bg-light me-1"></span>Fora de trajeto</span>';
+  const truckBadge = p.level === 1
+    ? '<span class="badge text-bg-light border">🚛 Caminhão da empresa</span>'
+    : '<span class="badge text-bg-light border">🚛 Caminhão próprio</span>';
 
   row.innerHTML =
     '<div class="col-lg-8">' +
@@ -611,22 +639,19 @@ function renderToday() {
           '<span class="fw-bold">' + p.name + '</span>' +
           '<span>' +
             '<span class="badge text-bg-primary me-1">Nível ' + p.level + ' — ' + CONST.levelNames[p.level] + '</span>' +
+            truckBadge + ' ' +
             inTransitBadge +
           '</span>' +
         '</div>' +
         '<div class="card-body">' +
           '<div class="row text-center mb-3">' +
-            '<div class="col"><small class="text-muted d-block">Dia do jogo</small><span class="stat-big">' + p.day + '</span><small class="text-muted d-block mt-1">de 30</small></div>' +
+            '<div class="col"><small class="text-muted d-block">Dia do jogo</small><span class="stat-big">' + p.day + '</span></div>' +
             '<div class="col"><small class="text-muted d-block">Dia da semana</small><span class="stat-big">' + CONST.weekdays[p.weekday] + '</span></div>' +
             '<div class="col"><small class="text-muted d-block">Hora</small><span class="stat-big">' + pad2(p.hour) + ':' + pad2(p.minute || 0) + '</span></div>' +
             '<div class="col"><small class="text-muted d-block">Cidade</small><span class="stat-big stat-big--city">' + (p.currentCity || '—') + '</span></div>' +
           '</div>' +
           '<div class="next-action-callout"><strong>O que fazer agora:</strong><br>' + suggestion.text +
           (suggestion.next ? '<div class="next-action-sub mt-2"><strong>Próxima ação:</strong> ' + suggestion.next + '</div>' : '') +
-          '</div>' +
-          '<div class="d-flex flex-wrap gap-2">' +
-            '<button class="btn btn-outline-primary btn-sm" data-act="time">Avançar tempo (+1h)</button>' +
-            '<button class="btn btn-outline-success btn-sm" data-act="level">Mudar nível</button>' +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -639,6 +664,8 @@ function renderToday() {
           '<p class="mb-1"><span class="text-muted">Empresa:</span> <strong>' + (p.company || '—') + '</strong></p>' +
           '<p class="mb-1"><span class="text-muted">Comissão:</span> <strong>' + pct(p) + '% do frete</strong></p>' +
           '<p class="mb-0"><span class="text-muted">Turno:</span> <strong>' + fmtTurno() + '</strong></p>' +
+          '<hr class="my-2">' +
+          '<button class="btn btn-outline-primary btn-sm w-100" data-act="time">Avançar tempo (+1h)</button>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -844,15 +871,6 @@ function renderActions() {
     { key: 'dinner', act: 'meal-dinner', icon: '🌙', label: 'Registrar jantar', cost: money(p, cfg.meals.dinner.amount) },
     { key: 'lodging', act: 'lodging', icon: '🛏', label: 'Registrar estadia', cost: money(p, cfg.lodging.amount) }
   ];
-  html += '<div class="action-grid mb-3">';
-  stepBtns.forEach(s => {
-    const enabled = nextStep === s.key;
-    const state = dailyStepDone(p, s.key) ? 'done' : (enabled ? 'next' : 'locked');
-    html += '<button class="btn btn-outline-warning btn-sm step-' + state + '" data-act="' + s.act + '"' +
-      (enabled ? '' : ' disabled') + '>' + s.icon + ' ' + s.label + '<br><small>' + s.cost + '</small></button>';
-  });
-  html += '</div>';
-
   if (nextStep === null) {
     html += '<div class="d-grid gap-2 mb-3">' +
       '<button class="btn btn-info" data-act="sleep">🌙 Dormir / próximo dia' +
@@ -861,6 +879,11 @@ function renderActions() {
   }
 
   html += '<div class="d-grid gap-2">';
+  if (nextStep) {
+    const s = stepBtns.find(b => b.key === nextStep);
+    html += '<button class="btn btn-outline-warning btn-sm" data-act="' + s.act + '">' + s.icon + ' ' + s.label +
+      '<small class="d-block">' + s.cost + '</small></button>';
+  }
   if (salaryDue) html += '<button class="btn btn-success" data-act="salary">💰 Receber salário (' + money(p, cfg.salary[p.level]) + ')</button>';
   if (empDue) {
     const t = employeeTotalSalary(p);
@@ -876,6 +899,8 @@ function renderActions() {
   if (!isInTransit(p)) {
     html += '<button class="btn btn-outline-secondary" data-act="reposition">🧭 Registrar deslocamento vazio</button>';
   }
+  html += '<button class="btn btn-outline-secondary" data-act="toll">🛣 Registrar pedágio</button>';
+  html += '<button class="btn btn-outline-secondary" data-act="fuel">⛽ Registrar abastecimento</button>';
   html += '<button class="btn btn-outline-secondary" data-act="expense">💸 Registrar despesa / lançamento</button>';
   html += '</div>';
 
@@ -913,7 +938,7 @@ function renderChecklist() {
     item('meal_dinner', cfg.meals.dinner.label, money(p, cfg.meals.dinner.amount), money(p, cfg.meals.dinner.amount)) +
     item('lodging', 'Estadia', money(p, cfg.lodging.amount), money(p, cfg.lodging.amount)) +
     '<hr class="my-2">' +
-    '<div class="small text-muted">Dia ' + p.day + ' · ' + CONST.weekdays[p.weekday] +
+    '<div class="small text-muted">Dia ' + p.day + ' de 30 · ' + CONST.weekdays[p.weekday] +
     (isInTransit(p) ? ' · em trajeto' : ' · fora de trajeto') + '</div>';
 }
 
@@ -1256,6 +1281,7 @@ function handleAction(act) {
   }
   if (act === 'cargo') { openCargoModal(); return; }
   if (act === 'expense') { openExpenseModal(); return; }
+  if (act === 'toll' || act === 'fuel') { openQuickExpenseConfirm(p, act); return; }
   if (act === 'reposition') { openRepositionModal(); return; }
   if (act.startsWith('meal-')) {
     const kind = act.split('-')[1];
@@ -1557,7 +1583,7 @@ function fillExpenseModal() {
 
 function openExpenseModal() {
   const sel = document.getElementById('exType');
-  sel.innerHTML = EXPENSE_TYPES.map(e => '<option value="' + e.id + '">' + e.label + '</option>').join('');
+  sel.innerHTML = EXPENSE_TYPES.filter(e => e.id !== 'toll' && e.id !== 'fuel').map(e => '<option value="' + e.id + '">' + e.label + '</option>').join('');
   document.getElementById('exNote').value = '';
   const p = currentProfile();
   populateCitySelect(document.getElementById('exCity'), p ? (p.currentCity || p.baseCity || '') : '', p ? p.game : 'ATS');
@@ -1871,6 +1897,7 @@ document.getElementById('importFile').addEventListener('change', (ev) => {
 let confirmCallback = null;
 let pendingAction = null;
 let pendingCity = '';
+let pendingAmount = 0;
 
 function confirmModal(title, bodyHtml, callback, opts) {
   opts = opts || {};
@@ -1896,7 +1923,16 @@ function confirmModal(title, bodyHtml, callback, opts) {
       cw.classList.add('d-none');
     }
   }
-  pendingAction = { time: !!opts.time, durationMin: opts.durationMin || 0, lodging: !!opts.lodging, city: !!opts.city, undo: !!opts.undo };
+  const aw = document.getElementById('cfAmountWrap');
+  if (aw) {
+    if (opts.amount) {
+      document.getElementById('cfAmount').value = opts.amountDef !== undefined ? opts.amountDef : '';
+      aw.classList.remove('d-none');
+    } else {
+      aw.classList.add('d-none');
+    }
+  }
+  pendingAction = { time: !!opts.time, durationMin: opts.durationMin || 0, lodging: !!opts.lodging, city: !!opts.city, amount: !!opts.amount, undo: !!opts.undo };
   confirmCallback = callback;
   modal('Confirm').show();
 }
@@ -1935,6 +1971,11 @@ function applyPendingTime() {
 }
 
 document.getElementById('btnConfirmOk').addEventListener('click', () => {
+  if (pendingAction && pendingAction.amount) {
+    const raw = parseFloat(document.getElementById('cfAmount').value);
+    if (isNaN(raw) || raw <= 0) { toast('Informe um valor válido.', 'danger'); return; }
+    pendingAmount = raw;
+  }
   modal('Confirm').hide();
   if (pendingAction && (pendingAction.time || pendingAction.undo)) pushUndo();
   applyPendingCity();
@@ -1943,6 +1984,7 @@ document.getElementById('btnConfirmOk').addEventListener('click', () => {
   confirmCallback = null;
   pendingAction = null;
   pendingCity = '';
+  pendingAmount = 0;
 });
 
 /* ---------------- Funcionário (adicionar) ---------------- */

@@ -2,12 +2,20 @@
 /* Versão única do app — usada pelo app.js (UI) e pelo sw.js (nome do cache do PWA).
    Ao publicar mudanças: (1) incrementar APP_VERSION aqui e (2) adicionar a entrada
    correspondente no topo de APP_CHANGELOG (mais recente primeiro). */
-var APP_VERSION = '1.0.8';
+var APP_VERSION = '1.0.9';
 var APP_VERSION_DATE = '2026-08-15';
 
 /* Changelog do app — mais recente primeiro. Cada entrada: { version, date, changes[] }.
    O app mostra automaticamente um modal quando APP_VERSION muda e ao clicar na versão (navbar). */
 var APP_CHANGELOG = [
+  {
+    version: '1.0.9',
+    date: '2026-08-15',
+    changes: [
+      'Novo: botões de ação rápida para pedágio e abastecimento (com valor informado manualmente), com ícones próprios.',
+      'Pedágio e abastecimento removidos do modal de despesas — agora têm entrada própria.'
+    ]
+  },
   {
     version: '1.0.8',
     date: '2026-08-15',

@@ -79,27 +79,6 @@ body {
   color: #6c757d;
 }
 
-.action-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-}
-
-.action-grid .btn {
-  white-space: normal;
-  text-align: center;
-}
-
-.action-grid .btn.step-locked,
-.action-grid .btn.step-done {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.action-grid .btn.step-done {
-  border-style: dashed;
-}
-
 .next-action-callout {
   border-left: 4px solid var(--bs-primary);
   background: var(--bs-primary-bg-subtle);
