@@ -1,10 +1,14 @@
 // Service Worker — Campanha Realista
 // Estratégia: precache do app shell + Bootstrap CDN, cache-first com fallback de rede.
+// Versão única vem de version.js (mesmo APP_VERSION do app).
 
-const CACHE_VERSION = 'campanha-realista-v7';
+importScripts('./version.js');
+
+const CACHE_VERSION = 'campanha-realista-v' + APP_VERSION;
 const APP_SHELL = [
   './',
   './index.html',
+  './version.js',
   './app.js',
   './styles.css',
   './manifest.webmanifest',

@@ -89,6 +89,7 @@ Todos servem em HTTPS (necessário para o service worker).
 
 ```
 ├── index.html                  # SPA (abas, modais, toasts)
+├── version.js                  # Versão única do app (APP_VERSION)
 ├── app.js                      # Lógica, estado, renderização e eventos
 ├── styles.css                  # Estilos custom (resto vem do Bootstrap)
 ├── manifest.webmanifest        # Manifest do PWA

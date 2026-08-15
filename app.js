@@ -9,9 +9,6 @@ const STORAGE_KEY = 'realistic_campaign_app';
 const THEME_KEY = 'realistic_campaign_theme';
 const CONFIG_KEY = 'realistic_campaign_config';
 
-const APP_VERSION = '1.0.3';
-const APP_VERSION_DATE = '2026-08-14';
-
 const CONST = {
   weekdays: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
   levelNames: ['', 'Empregado', 'Empregado c/ caminhão', 'Autônomo', 'Empresário'],
@@ -338,7 +335,8 @@ function actionMeal(p, kind) {
   const amount = employer ? 0 : -meal.amount;
   addEntry(p, {
     type: 'meal_' + kind, label: meal.label,
-    amount, note: employer ? 'Em trajeto — pago pelo empregador.' : (inT ? 'Em trajeto.' : 'Fora de trajeto.')
+    amount, note: (employer ? 'Em trajeto — pago pelo empregador.' : (inT ? 'Em trajeto.' : 'Fora de trajeto.')) +
+      (pendingCity ? ' · em ' + pendingCity : '')
   });
   afterTransaction(p, 'meal_' + kind);
 }
@@ -349,7 +347,8 @@ function actionLodging(p) {
   const amount = employer ? 0 : -cfg.lodging.amount;
   addEntry(p, {
     type: 'lodging', label: 'Estadia',
-    amount, note: employer ? 'Em trajeto — pago pelo empregador.' : (inT ? 'Em trajeto.' : 'Fora de trajeto (por sua conta).')
+    amount, note: (employer ? 'Em trajeto — pago pelo empregador.' : (inT ? 'Em trajeto.' : 'Fora de trajeto (por sua conta).')) +
+      (pendingCity ? ' · em ' + pendingCity : '')
   });
   afterTransaction(p, 'lodging');
 }
@@ -1171,12 +1170,11 @@ function handleAction(act) {
       confirmModal('Dormir / próximo dia',
         'Estadia já registrada hoje. Avançar direto para <strong>amanhã às ' + fmtMin(cfg.lodging.nextDayHour * 60) + '</strong>? Sem novo débito.',
         () => {
-          pushUndo();
           fromAbs(p, (Math.floor(toAbs(p) / 1440) + 1) * 1440 + cfg.lodging.nextDayHour * 60);
           saveState();
           advanceDayFlow(p, 'g_set_time ' + p.hour + (p.minute ? ' ' + p.minute : ''), fromDay, fromDay + 1, fromWeekday);
         },
-        { time: false });
+        { time: false, city: true, undo: true });
     }
     return;
   }
@@ -1209,7 +1207,7 @@ function handleAction(act) {
       (employer ? 'Em trajeto — pago pelo empregador (sem débito).' : 'Debitar ' + money(p, meal.amount) + ' do seu saldo?') +
       ' <small class="d-block text-muted">Dia ' + p.day + ', ' + pad2(p.hour) + ':' + pad2(p.minute || 0) + '</small>',
       () => actionMeal(p, kind),
-      { time: true, durationMin: meal.durationMin || 0 });
+      { time: true, durationMin: meal.durationMin || 0, city: true });
     return;
   }
   if (act === 'lodging') {
@@ -1218,7 +1216,7 @@ function handleAction(act) {
       (employer ? 'Em trajeto — pago pelo empregador (sem débito).' : 'Debitar ' + money(p, cfg.lodging.amount) + ' do seu saldo?') +
       ' <small class="d-block text-muted">Dia ' + p.day + ', ' + pad2(p.hour) + ':' + pad2(p.minute || 0) + '</small>',
       () => actionLodging(p),
-      { time: true, lodging: true });
+      { time: true, lodging: true, city: true });
     return;
   }
   if (act.startsWith('empTravel-')) {
@@ -1498,6 +1496,7 @@ function openExpenseModal() {
   sel.innerHTML = EXPENSE_TYPES.map(e => '<option value="' + e.id + '">' + e.label + '</option>').join('');
   document.getElementById('exNote').value = '';
   const p = currentProfile();
+  populateCitySelect(document.getElementById('exCity'), p ? (p.currentCity || p.baseCity || '') : '', p ? p.game : 'ATS');
   document.getElementById('exTime').value = p ? pad2(p.hour) + ':' + pad2(p.minute || 0) : '';
   fillExpenseModal();
   modal('Expense').show();
@@ -1515,15 +1514,17 @@ document.getElementById('btnSaveExpense').addEventListener('click', () => {
   const magnitude = isNaN(amountRaw) ? 0 : Math.abs(amountRaw);
   const signed = dir === 'in' ? magnitude : -magnitude;
   const note = document.getElementById('exNote').value.trim();
+  const city = document.getElementById('exCity').value.trim();
   const timeParts = String(document.getElementById('exTime').value || '').split(':');
   const th = parseInt(timeParts[0], 10);
   modal('Expense').hide();
   pushUndo();
+  if (city) p.currentCity = city;
   if (!isNaN(th)) {
     const tm = isNaN(parseInt(timeParts[1], 10)) ? 0 : Math.min(59, Math.max(0, parseInt(timeParts[1], 10)));
     applyActionTime(p, Math.min(23, Math.max(0, th)), tm, 0);
   }
-  addExpense(p, typeId, signed, note);
+  addExpense(p, typeId, signed, note + (city ? ' · em ' + city : ''));
 });
 
 /* ---------------- Resumo do dia ---------------- */
@@ -1802,6 +1803,7 @@ document.getElementById('importFile').addEventListener('change', (ev) => {
 
 let confirmCallback = null;
 let pendingAction = null;
+let pendingCity = '';
 
 function confirmModal(title, bodyHtml, callback, opts) {
   opts = opts || {};
@@ -1817,9 +1819,30 @@ function confirmModal(title, bodyHtml, callback, opts) {
       wrap.classList.add('d-none');
     }
   }
-  pendingAction = { time: !!opts.time, durationMin: opts.durationMin || 0, lodging: !!opts.lodging };
+  const cw = document.getElementById('cfCityWrap');
+  if (cw) {
+    if (opts.city) {
+      const p = currentProfile();
+      populateCitySelect(document.getElementById('cfCity'), p ? (p.currentCity || p.baseCity || '') : '', p ? p.game : 'ATS');
+      cw.classList.remove('d-none');
+    } else {
+      cw.classList.add('d-none');
+    }
+  }
+  pendingAction = { time: !!opts.time, durationMin: opts.durationMin || 0, lodging: !!opts.lodging, city: !!opts.city, undo: !!opts.undo };
   confirmCallback = callback;
   modal('Confirm').show();
+}
+
+function applyPendingCity() {
+  const p = currentProfile();
+  pendingCity = '';
+  if (!p || !pendingAction || !pendingAction.city) return;
+  const city = document.getElementById('cfCity').value.trim();
+  if (city) {
+    p.currentCity = city;
+    pendingCity = city;
+  }
 }
 
 function applyPendingTime() {
@@ -1846,11 +1869,13 @@ function applyPendingTime() {
 
 document.getElementById('btnConfirmOk').addEventListener('click', () => {
   modal('Confirm').hide();
-  if (pendingAction && pendingAction.time) pushUndo();
+  if (pendingAction && (pendingAction.time || pendingAction.undo)) pushUndo();
+  applyPendingCity();
   applyPendingTime();
   if (confirmCallback) confirmCallback();
   confirmCallback = null;
   pendingAction = null;
+  pendingCity = '';
 });
 
 /* ---------------- Funcionário (adicionar) ---------------- */
