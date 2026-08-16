@@ -224,6 +224,27 @@ body {
   font-style: italic;
 }
 
+.city-combo-opt--custom {
+  color: var(--bs-secondary);
+}
+
+.city-combo-create {
+  margin-top: 0.25rem;
+  padding: 0.4rem 0.75rem;
+  border-top: 1px dashed var(--bs-border-color);
+  color: var(--bs-primary);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.city-combo-create:hover,
+.city-combo-create.active {
+  background: var(--bs-primary-bg-subtle);
+}
+
 /* Changelog */
 .changelog-item {
   padding: 0.6rem 0.9rem;

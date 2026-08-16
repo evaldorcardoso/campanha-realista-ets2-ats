@@ -73,6 +73,8 @@ Tudo fica no **`localStorage`** do navegador, sem backend:
 | `realistic_campaign_theme` | Tema claro/escuro |
 | `realistic_campaign_active_tab` | Aba ativa |
 | `realistic_campaign_seen_version` | Última versão do app vista (controla o modal de changelog) |
+| `realistic_campaign_custom_cities` | Cidades criadas por você na busca (salvas só neste aparelho) |
+| `realistic_campaign_custom_companies` | Empresas criadas por você na busca (salvas só neste aparelho) |
 
 Faça **backups** com o botão *Exportar JSON* na barra superior (o `localStorage` é específico do navegador/perfil).
 

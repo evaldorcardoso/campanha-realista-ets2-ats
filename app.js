@@ -1373,7 +1373,7 @@ function fillProfileForm() {
   set('cfgName', p.name);
   set('cfgGame', p.game);
   populateCitySelect(document.getElementById('cfgCity'), p.baseCity, p.game);
-  populateCompanySelect(document.getElementById('cfgCompany'), p.company, p.game);
+  populateCompanyCombo(document.getElementById('cfgCompany'), p.company, p.game);
   set('cfgStart', p.startBalance);
 }
 
@@ -1387,7 +1387,7 @@ document.getElementById('cfgGame').addEventListener('change', () => {
   if (!p) return;
   const game = document.getElementById('cfgGame').value;
   populateCitySelect(document.getElementById('cfgCity'), p.baseCity, game);
-  populateCompanySelect(document.getElementById('cfgCompany'), p.company, game);
+  populateCompanyCombo(document.getElementById('cfgCompany'), p.company, game);
 });
 
 function renderProfile() {
@@ -2038,7 +2038,27 @@ document.getElementById('btnTheme').addEventListener('click', () => {
 /* ---------------- Cidades (lista da wiki) ---------------- */
 
 const CITIES_KEY = 'realistic_campaign_cities';
+const CUSTOM_CITIES_KEY = 'realistic_campaign_custom_cities';
 let CITIES = { ATS: [], ETS2: [] };
+let CUSTOM_CITIES = { ATS: [], ETS2: [] };
+
+function loadCustomList(key) {
+  try {
+    const raw = JSON.parse(localStorage.getItem(key) || 'null');
+    if (raw && Array.isArray(raw.ATS) && Array.isArray(raw.ETS2)) return raw;
+  } catch (e) { /* ignore */ }
+  return { ATS: [], ETS2: [] };
+}
+
+function saveCustomList(key, list) {
+  try { localStorage.setItem(key, JSON.stringify(list)); } catch (e) { /* ignore */ }
+}
+
+/* Mantém apenas customizados que não colidem com a lista oficial (sem acentos/caixa). */
+function customEntries(officialList, customList, nameOf) {
+  const names = new Set(officialList.map(o => normSearch(nameOf(o))));
+  return customList.filter(c => !names.has(normSearch(nameOf(c))));
+}
 
 async function loadCities() {
   try {
@@ -2046,12 +2066,16 @@ async function loadCities() {
     if (cached && Array.isArray(cached.ATS) && Array.isArray(cached.ETS2)) {
       CITIES = cached;
     }
+    CUSTOM_CITIES = loadCustomList(CUSTOM_CITIES_KEY);
     const [ats, ets2] = await Promise.all([
       fetch('cities_ats.json').then(r => r.json()),
       fetch('cities_ets2.json').then(r => r.json())
     ]);
     if (Array.isArray(ats)) CITIES.ATS = ats;
     if (Array.isArray(ets2)) CITIES.ETS2 = ets2;
+    CUSTOM_CITIES.ATS = customEntries(CITIES.ATS, CUSTOM_CITIES.ATS, c => c.city);
+    CUSTOM_CITIES.ETS2 = customEntries(CITIES.ETS2, CUSTOM_CITIES.ETS2, c => c.city);
+    saveCustomList(CUSTOM_CITIES_KEY, CUSTOM_CITIES);
     try { localStorage.setItem(CITIES_KEY, JSON.stringify(CITIES)); } catch (e) { /* ignore */ }
   } catch (e) {
     if (CITIES.ATS.length === 0 && CITIES.ETS2.length === 0) {
@@ -2100,13 +2124,21 @@ function comboRender(inputEl) {
     });
     list = starts.concat(contains);
   }
-  if (list.length === 0) {
-    ul.innerHTML = '<li class="city-combo-empty">Nenhum resultado para “' + escHtml(inputEl.value) + '”</li>';
-  } else {
-    ul.innerHTML = list.map(o =>
-      '<li class="city-combo-opt" data-value="' + escAttr(o.value) + '">' + escHtml(o.label) + '</li>'
+  const typed = (inputEl.value || '').trim();
+  const exact = !!typed && opts.some(o => normSearch(o.value) === normSearch(typed));
+  const canCreate = !!typed && !exact && !inputEl.disabled;
+  let html = '';
+  if (list.length > 0) {
+    html = list.map(o =>
+      '<li class="city-combo-opt' + (o.custom ? ' city-combo-opt--custom' : '') + '" data-value="' + escAttr(o.value) + '">' + escHtml(o.label) + '</li>'
     ).join('');
+  } else if (!canCreate) {
+    html = '<li class="city-combo-empty">Nenhum resultado para “' + escHtml(inputEl.value) + '”</li>';
   }
+  if (canCreate) {
+    html += '<li class="city-combo-create" data-value="' + escAttr(typed) + '">+ Criar “' + escHtml(typed) + '”</li>';
+  }
+  ul.innerHTML = html;
   inputEl._comboIdx = -1;
 }
 
@@ -2145,14 +2177,66 @@ function comboSelect(inputEl, optEl) {
 
 function populateCitySelect(inputEl, selectedValue, game) {
   if (!inputEl) return;
-  const list = CITIES[game] || [];
-  inputEl._comboOpts = list.map(c => ({
+  inputEl._comboKind = 'city';
+  inputEl._comboGame = game;
+  const official = CITIES[game] || [];
+  const customs = customEntries(official, CUSTOM_CITIES[game] || [], c => c.city);
+  inputEl._comboOpts = official.map(c => ({
     value: c.city,
     label: c.city + (c.state ? ' — ' + c.state : '')
-  }));
+  })).concat(customs.map(c => ({
+    value: c.city,
+    label: c.city + ' (sua)',
+    custom: true
+  })));
   inputEl._comboVal = selectedValue || '';
   inputEl.value = selectedValue || '';
   comboHide(inputEl);
+}
+
+function populateCompanyCombo(inputEl, selectedValue, game) {
+  if (!inputEl) return;
+  inputEl._comboKind = 'company';
+  inputEl._comboGame = game;
+  const official = COMPANIES[game] || [];
+  const customs = customEntries(official, CUSTOM_COMPANIES[game] || [], c => c.name);
+  inputEl._comboOpts = official.map(c => ({
+    value: c.name,
+    label: c.name
+  })).concat(customs.map(c => ({
+    value: c.name,
+    label: c.name + ' (sua)',
+    custom: true
+  })));
+  inputEl._comboVal = selectedValue || '';
+  inputEl.value = selectedValue || '';
+  comboHide(inputEl);
+}
+
+function comboCreate(inputEl) {
+  const typed = (inputEl.value || '').trim();
+  if (!typed) return;
+  const kind = inputEl._comboKind || 'city';
+  const game = inputEl._comboGame;
+  const existingOpt = comboOpts(inputEl).find(o => normSearch(o.value) === normSearch(typed));
+  if (existingOpt) {
+    inputEl.value = existingOpt.value;
+    inputEl._comboVal = existingOpt.value;
+    comboHide(inputEl);
+    return;
+  }
+  if (kind === 'company') {
+    CUSTOM_COMPANIES[game] = CUSTOM_COMPANIES[game] || [];
+    CUSTOM_COMPANIES[game].push({ name: typed });
+    saveCustomList(CUSTOM_COMPANIES_KEY, CUSTOM_COMPANIES);
+    populateCompanyCombo(inputEl, typed, game);
+  } else {
+    CUSTOM_CITIES[game] = CUSTOM_CITIES[game] || [];
+    CUSTOM_CITIES[game].push({ city: typed, state: '' });
+    saveCustomList(CUSTOM_CITIES_KEY, CUSTOM_CITIES);
+    populateCitySelect(inputEl, typed, game);
+  }
+  toast((kind === 'company' ? 'Empresa' : 'Cidade') + ' “' + typed + '” criada e salva neste aparelho.', 'success');
 }
 
 document.addEventListener('focusin', (ev) => {
@@ -2186,6 +2270,12 @@ document.addEventListener('click', (ev) => {
     if (inputEl) comboSelect(inputEl, li);
     return;
   }
+  const createBtn = ev.target.closest && ev.target.closest('.city-combo-create');
+  if (createBtn) {
+    const inputEl = createBtn.closest('.city-combo') && createBtn.closest('.city-combo').querySelector('.city-combo-input');
+    if (inputEl) comboCreate(inputEl);
+    return;
+  }
   if (ev.target.closest && ev.target.closest('.city-combo')) {
     const inputEl = ev.target.closest('.city-combo-input');
     if (inputEl) comboShow(inputEl);
@@ -2201,7 +2291,7 @@ document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape') { comboHide(inputEl); return; }
   if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
     if (!ul || ul.classList.contains('d-none')) { comboShow(inputEl); return; }
-    const items = Array.prototype.slice.call(ul.querySelectorAll('.city-combo-opt'));
+    const items = Array.prototype.slice.call(ul.querySelectorAll('.city-combo-opt, .city-combo-create'));
     if (items.length === 0) return;
     ev.preventDefault();
     let idx = inputEl._comboIdx === undefined ? -1 : inputEl._comboIdx;
@@ -2213,11 +2303,12 @@ document.addEventListener('keydown', (ev) => {
   }
   if (ev.key === 'Enter') {
     if (!ul || ul.classList.contains('d-none')) return;
-    const items = ul.querySelectorAll('.city-combo-opt');
+    const items = ul.querySelectorAll('.city-combo-opt, .city-combo-create');
     const idx = inputEl._comboIdx;
     if (idx >= 0 && items[idx]) {
       ev.preventDefault();
-      comboSelect(inputEl, items[idx]);
+      if (items[idx].classList.contains('city-combo-create')) comboCreate(inputEl);
+      else comboSelect(inputEl, items[idx]);
     }
     return;
   }
@@ -2231,7 +2322,9 @@ document.querySelectorAll('.modal').forEach(m => {
 /* ---------------- Empresas (lista da wiki) ---------------- */
 
 const COMPANIES_KEY = 'realistic_campaign_companies';
+const CUSTOM_COMPANIES_KEY = 'realistic_campaign_custom_companies';
 let COMPANIES = { ATS: [], ETS2: [] };
+let CUSTOM_COMPANIES = { ATS: [], ETS2: [] };
 
 async function loadCompanies() {
   try {
@@ -2239,29 +2332,22 @@ async function loadCompanies() {
     if (cached && Array.isArray(cached.ATS) && Array.isArray(cached.ETS2)) {
       COMPANIES = cached;
     }
+    CUSTOM_COMPANIES = loadCustomList(CUSTOM_COMPANIES_KEY);
     const [ats, ets2] = await Promise.all([
       fetch('companies_ats.json').then(r => r.json()),
       fetch('companies_ets2.json').then(r => r.json())
     ]);
     if (Array.isArray(ats)) COMPANIES.ATS = ats;
     if (Array.isArray(ets2)) COMPANIES.ETS2 = ets2;
+    CUSTOM_COMPANIES.ATS = customEntries(COMPANIES.ATS, CUSTOM_COMPANIES.ATS, c => c.name);
+    CUSTOM_COMPANIES.ETS2 = customEntries(COMPANIES.ETS2, CUSTOM_COMPANIES.ETS2, c => c.name);
+    saveCustomList(CUSTOM_COMPANIES_KEY, CUSTOM_COMPANIES);
     try { localStorage.setItem(COMPANIES_KEY, JSON.stringify(COMPANIES)); } catch (e) { /* ignore */ }
   } catch (e) {
     if (COMPANIES.ATS.length === 0 && COMPANIES.ETS2.length === 0) {
       console.warn('Falha ao carregar companies_*.json — sirva via static server (ex.: npx serve .)');
     }
   }
-}
-
-function companyOptions(game) {
-  const list = COMPANIES[game] || [];
-  return list.map(c => '<option value="' + escAttr(c.name) + '">' + escHtml(c.name) + '</option>').join('');
-}
-
-function populateCompanySelect(el, selectedValue, game) {
-  if (!el) return;
-  el.innerHTML = '<option value="">— selecionar —</option>' + companyOptions(game);
-  if (selectedValue) el.value = selectedValue;
 }
 
 function escHtml(v) {

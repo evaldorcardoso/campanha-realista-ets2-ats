@@ -227,9 +227,10 @@
                   </div>
                   <div class="col">
                     <label class="form-label">Empresa</label>
-                    <select class="form-select" id="cfgCompany">
-                      <option value="">— selecionar —</option>
-                    </select>
+                    <div class="city-combo">
+                      <input type="text" class="form-control city-combo-input" id="cfgCompany" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                      <ul class="city-combo-list d-none" role="listbox" aria-label="Empresas"></ul>
+                    </div>
                   </div>
                 </div>
                 <div class="mb-3">
