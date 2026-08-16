@@ -2,13 +2,29 @@
 /* Versão única do app — usada pelo app.js (UI) e pelo sw.js (nome do cache do PWA).
    Ao publicar mudanças: (1) incrementar APP_VERSION aqui e (2) adicionar a entrada
    correspondente no topo de APP_CHANGELOG (mais recente primeiro). */
-var APP_VERSION = '1.2.0';
+var APP_VERSION = '1.3.0';
 var APP_VERSION_DATE = '2026-08-16';
 
 /* Changelog do app — mais recente primeiro. Cada entrada: { version, date, changes[] }
-   e opcionalmente changesEn[] (tradução em inglês). O app mostra automaticamente um
-   modal quando APP_VERSION muda e ao clicar na versão (navbar). */
+    e opcionalmente changesEn[] (tradução em inglês). O app mostra automaticamente um
+    modal quando APP_VERSION muda e ao clicar na versão (navbar). */
 var APP_CHANGELOG = [
+  {
+    version: '1.3.0',
+    date: '2026-08-16',
+    changes: [
+      'Novo aba de Financiamentos com contratos, parcelas vencidas e alertas',
+      'Nova modal para criar financiamentos (regra +20% ÷ 12 meses)',
+      'Alertas persistentes de parcelas vencidas (exibidos em todas as abas)',
+      'Suporte a múltiplos contratos simultâneos'
+    ],
+    changesEn: [
+      'New Financing tab with contracts, overdue installments and alerts',
+      'New modal to create financing (rule +20% ÷ 12 months)',
+      'Persistent overdue installment alerts (shown on all tabs)',
+      'Support for multiple simultaneous financing contracts'
+    ]
+  },
   {
     version: '1.2.0',
     date: '2026-08-16',

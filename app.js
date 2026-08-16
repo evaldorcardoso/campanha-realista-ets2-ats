@@ -174,6 +174,7 @@ function normalizeProfile(p) {
   p.lastInsuranceDay = p.lastInsuranceDay || 0;
   p.minute = p.minute || 0;
   p.reposition = null;
+  p.financing = p.financing || [];
   (p.cargo || []).forEach(c => { c.driver = c.driver || 'player'; });
   return p;
 }
@@ -225,7 +226,7 @@ function makeProfile(name, game) {
     day: 1, weekday: 0, hour: 7, minute: 0,
     currentCity: '', inTransit: false,
     lastSalaryDay: 0, lastInsuranceDay: 0,
-    log: [], cargo: [], employees: []
+    log: [], cargo: [], employees: [], financing: []
   };
 }
 
@@ -588,6 +589,82 @@ function addEmployee(p, name) {
   p.employees.push({ id: uid(), name: name, lastSalaryDay: 0 });
 }
 
+function createFinancing(p, data) {
+  const { amount, description, installments, interest, downPayment } = data;
+  const financedAmount = Math.max(0, amount - (downPayment || 0));
+  const totalAmount = Math.round(financedAmount * (1 + (interest || 20) / 100) * 100) / 100;
+  const monthlyPayment = Math.round(totalAmount / Math.max(1, installments || 12) * 100) / 100;
+
+  const contract = {
+    id: 'f' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    description: description || '',
+    principal: financedAmount,
+    interestRate: (interest || 20) / 100,
+    totalAmount: totalAmount,
+    monthlyPayment: monthlyPayment,
+    installments: Math.max(1, installments || 12),
+    paidPayments: 0,
+    startDay: p.day,
+    nextPaymentDay: p.day + (cfg.salaryDay || 30),
+    level: p.level,
+    createdAt: new Date().toISOString()
+  };
+
+  p.financing.push(contract);
+
+  if ((downPayment || 0) > 0) {
+    addEntry(p, {
+      type: 'financing',
+      label: t('entry.financingEntry', { desc: description }),
+      amount: -(downPayment || 0),
+      note: t('entry.financingDownPayment', { m: money(p, downPayment || 0) })
+    });
+  }
+
+  return contract;
+}
+
+function financingDueContracts(p) {
+  return p.financing.filter(f =>
+    f.paidPayments < f.installments && p.day >= f.nextPaymentDay
+  );
+}
+
+function financingOverdueContracts(p) {
+  return p.financing.filter(f =>
+    f.paidPayments < f.installments && p.day >= f.nextPaymentDay
+  );
+}
+
+function financingTotalPaid(p, contract) {
+  return contract.paidPayments * contract.monthlyPayment;
+}
+
+function financingRemainingCount(p, contract) {
+  return Math.max(0, (contract.installments || 12) - (contract.paidPayments || 0));
+}
+
+function payFinancingInstallment(p, contractId) {
+  const contract = p.financing.find(f => f.id === contractId);
+  if (!contract || contract.paidPayments >= contract.installments) return false;
+
+  addEntry(p, {
+    type: 'financing',
+    label: t('entry.financingPayment', { n: contract.paidPayments + 1, total: contract.installments }),
+    amount: -contract.monthlyPayment,
+    note: t('entry.financingNote', {
+      n: contract.paidPayments + 1,
+      total: contract.installments,
+      m: money(p, contract.monthlyPayment)
+    })
+  });
+
+  contract.paidPayments += 1;
+  contract.nextPaymentDay += (cfg.salaryDay || 30);
+
+  return true;
+}
+
 function addExpense(p, typeId, amount, note) {
   addEntry(p, { type: typeId, label: labelOfExpense(typeId), amount: amount, note: note });
   afterTransaction(p, typeId);
@@ -800,6 +877,12 @@ function suggestAction(p) {
     return { text: t('suggest.allDone', { t: fmtMin(cfg.lodging.nextDayHour * 60) }) };
   }
 
+  const finDue = financingDueContracts(p);
+  if (finDue.length > 0) {
+    const totalDue = finDue.reduce((s, f) => s + f.monthlyPayment, 0);
+    return { text: t('suggest.financingDue', { n: finDue.length, m: money(p, totalDue) }) };
+  }
+
   if (p.level <= 2 && now >= cfg.turno.employeeEndHour * 60) {
     const dinnerMissing = !mealRegisteredToday(p, 'dinner');
     return {
@@ -908,6 +991,11 @@ function renderActions() {
     html += '<button class="btn btn-danger" data-act="payEmployees">' + t('actions.payEmployees', { n: t2.count, m: money(p, t2.total), s: money(p, t2.salary), c: money(p, t2.charges) }) + '</button>';
   }
   if (insDue) html += '<button class="btn btn-danger" data-act="insurance">' + t('actions.insurance', { m: money(p, cfg.insuranceAts) }) + '</button>';
+  const finDue = financingDueContracts(p);
+  if (finDue.length > 0) {
+    const totalDue = finDue.reduce((s, f) => s + f.monthlyPayment, 0);
+    html += '<button class="btn btn-warning" data-act="financingPay">' + t('actions.payFinancing', { m: money(p, totalDue) }) + '</button>';
+  }
   if (!isInTransit(p)) html += '<button class="btn btn-primary" data-act="cargo">' + t('actions.newCargo') + '</button>';
   if (activeCargos.length) {
     activeCargos.forEach(c => {
@@ -1018,7 +1106,7 @@ function renderCargo() {
     if (btn0) btn0.style.display = '';
     return;
   }
-panel.innerHTML = p.cargo.map(c => {
+  panel.innerHTML = p.cargo.map(c => {
     const active = c.status === 'active';
     const emp = c.driver && c.driver !== 'player' ? p.employees.find(e => e.id === c.driver) : null;
     const driverName = emp ? emp.name : (c.driver && c.driver !== 'player' ? t('cargo.employee') : t('cargo.you'));
@@ -1041,6 +1129,162 @@ panel.innerHTML = p.cargo.map(c => {
   const hasActivePlayerCargo = p.cargo.some(c => c.status === 'active' && c.driver === 'player');
   const btn = document.getElementById('btnNewLoad');
   if (btn) btn.style.display = hasActivePlayerCargo ? 'none' : '';
+}
+
+/* ---------------- Render: financiamentos ---------------- */
+
+function renderFinancing() {
+  const p = currentProfile();
+  if (!p || !p.financing || p.financing.length === 0) {
+    const panel = document.getElementById('financingPanel');
+    if (panel) panel.innerHTML = '<p class="text-muted small mb-0">' + t('financing.noContracts') + '</p>';
+    return;
+  }
+
+  let html = '';
+  const activeContracts = p.financing.filter(f => f.paidPayments < f.installments);
+  const completedContracts = p.financing.filter(f => f.paidPayments >= f.installments);
+
+  // Financiamentos ativos
+  if (activeContracts.length > 0) {
+    html += '<h6>' + t('financing.header') + '</h6>';
+    activeContracts.forEach(contract => {
+      const dueStatus = contract.paidPayments >= contract.installments ? '' : t('financing.overdueBadge');
+      const remaining = financingRemainingCount(p, contract);
+      const nextDay = contract.nextPaymentDay || '—';
+      html += `
+      <div class="mb-3 border-start border-warning ps-2">
+        <div class="d-flex justify-content-between align-items-center small">
+          <span>${contract.description || t('financing.noContracts')}</span>
+          <span class="badge bg-warning ${dueStatus ? 'd-inline' : 'd-none'}" title="${t('financing.overdueBadge')}">${dueStatus}</span>
+        </div>
+        <div class="d-flex justify-content-between small text-muted mb-1">
+          <span>${t('financing.contractProgress', { paid: contract.paidPayments, total: contract.installments })}</span>
+          <span>${t('financing.contractNextDay', { day: nextDay })}</span>
+        </div>
+        <div class="d-flex justify-content-between small">
+          <span>${t('financing.contractMonthly', { m: money(p, contract.monthlyPayment) })}</span>
+          <span>${t('financing.contractRemaining', { n: remaining })}</span>
+        </div>
+      </div>`;
+    });
+  }
+
+  // Financiamentos concluídos
+  if (completedContracts.length > 0) {
+    html += '<h6>' + t('financing.upcomingHeader') + '</h6>';
+    completedContracts.forEach(contract => {
+      html += `
+      <div class="mb-2 text-success small">
+        <strong>${contract.description}</strong> — ${t('financing.contractProgress', { paid: contract.installments, total: contract.installments })} • ${t('financing.payBtn')}
+      </div>`;
+    });
+  }
+
+  // Se não houver ativos nem completos
+  if (html === '') {
+    html = '<p class="text-muted small mb-0">' + t('financing.noContracts') + '</p>';
+  }
+
+  document.getElementById('financingPanel').innerHTML = html;
+  renderFinancingAlert();
+}
+
+function renderFinancingAlert() {
+  const p = currentProfile();
+  const container = document.getElementById('financingAlertContainer');
+  if (!container || !p || !p.financing) return;
+
+  const overdue = financingOverdueContracts(p);
+  if (overdue.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const totalDue = overdue.reduce((s, f) => s + f.monthlyPayment, 0);
+  container.innerHTML =
+    '<div class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">' +
+      '<span>' + t('financingAlert.overdue', { n: overdue.length, m: money(p, totalDue) }) + '</span>' +
+      '<button class="btn btn-sm btn-danger" data-act="financingPay">' +
+        '<i class="bi bi-cash"></i> ' + t('financingAlert.payBtn') +
+      '</button>' +
+    '</div>';
+}
+
+function openFinancingModal() {
+  const p = currentProfile();
+  if (!p) return;
+
+  modal('Financing').show();
+  const descInput = document.getElementById('fcDesc');
+  if (descInput) descInput.value = '';
+
+  const amountInput = document.getElementById('fcAmount');
+  if (amountInput) amountInput.value = '';
+
+  const downInput = document.getElementById('fcDown');
+  if (downInput) downInput.value = '0';
+
+  const installmentsInput = document.getElementById('fcInstallments');
+  if (installmentsInput) installmentsInput.value = '12';
+
+  const interestInput = document.getElementById('fcInterest');
+  if (interestInput) interestInput.value = '20';
+
+  updateFinancingSummary();
+}
+
+function updateFinancingSummary() {
+  const p = currentProfile();
+  if (!p) return;
+
+  const amount = parseFloat(document.getElementById('fcAmount').value) || 0;
+  const downPayment = parseFloat(document.getElementById('fcDown').value) || 0;
+  const installments = parseInt(document.getElementById('fcInstallments').value) || 12;
+  const interest = parseFloat(document.getElementById('fcInterest').value) || 20;
+
+  if (amount <= 0) {
+    document.getElementById('fcSummary').innerHTML = '';
+    return;
+  }
+
+  const financedAmount = Math.max(0, amount - downPayment);
+  const totalAmount = Math.round(financedAmount * (1 + interest / 100) * 100) / 100;
+  const monthlyPayment = Math.round(totalAmount / Math.max(1, installments) * 100) / 100;
+
+  document.getElementById('fcSummary').innerHTML =
+    t('financingModal.summary', {
+      total: money(p, totalAmount),
+      monthly: money(p, monthlyPayment),
+      installments: installments
+    });
+}
+
+function handleFinancingPay() {
+  const p = currentProfile();
+  if (!p || !p.financing) return;
+
+  const due = financingDueContracts(p);
+  if (due.length === 0) return;
+
+  if (due.length === 1) {
+    confirmModal(
+      t('confirm.financingPaymentTitle'),
+      t('confirm.financingPaymentBody', { m: money(p, due[0].monthlyPayment) }),
+      () => payFinancingInstallment(p, due[0].id),
+      { time: true }
+    );
+  } else {
+    const totalDue = due.reduce((s, f) => s + f.monthlyPayment, 0);
+    confirmModal(
+      t('confirm.financingPaymentTitle'),
+      t('confirm.financingPaymentBody', { m: money(p, totalDue) }),
+      () => {
+        due.forEach(contract => payFinancingInstallment(p, contract.id));
+      },
+      { time: true }
+    );
+  }
 }
 
 /* ---------------- Render: funcionários ---------------- */
@@ -1137,6 +1381,8 @@ function renderAll() {
   renderEmployees();
   renderRules();
   renderProfile();
+  renderFinancing();
+  renderFinancingAlert();
   const navVer = document.getElementById('appVersion');
   if (navVer) navVer.textContent = 'v' + APP_VERSION;
   const startVer = document.getElementById('startAppVersion');
@@ -1273,6 +1519,21 @@ function handleAction(act) {
   if (act === 'expense') { openExpenseModal(); return; }
   if (act === 'toll' || act === 'fuel') { openQuickExpenseConfirm(p, act); return; }
   if (act === 'reposition') { openRepositionModal(); return; }
+  if (act === 'financing') { openFinancingModal(); return; }
+  if (act === 'financingPay') { handleFinancingPay(); return; }
+  if (act.startsWith('payFinancing-')) {
+    const id = act.slice(13);
+    const contract = p.financing.find(f => f.id === id);
+    if (contract) {
+      confirmModal(
+        t('confirm.financingPaymentTitle'),
+        t('confirm.financingPaymentBody', { m: money(p, contract.monthlyPayment) }),
+        () => payFinancingInstallment(p, id),
+        { time: true }
+      );
+    }
+    return;
+  }
   if (act.startsWith('meal-')) {
     const kind = act.split('-')[1];
     const meal = cfg.meals[kind];
@@ -2003,6 +2264,38 @@ document.getElementById('btnSaveEmployee').addEventListener('click', () => {
   modal('Employee').hide();
   renderAll();
   toast(t('employeeModal.hiredToast', { name: name }), 'success');
+});
+
+document.getElementById('btnSaveFinancing').addEventListener('click', () => {
+  const p = currentProfile();
+  if (!p) return;
+
+  const amount = parseFloat(document.getElementById('fcAmount').value) || 0;
+  const description = document.getElementById('fcDesc').value.trim();
+  const downPayment = parseFloat(document.getElementById('fcDown').value) || 0;
+  const installments = parseInt(document.getElementById('fcInstallments').value) || 12;
+  const interest = parseFloat(document.getElementById('fcInterest').value) || 20;
+
+  if (amount <= 0) {
+    toast(t('financingModal.amountToast'), 'danger');
+    return;
+  }
+  if (p.level < 2) {
+    toast(t('financing.lvl2Required'), 'warning');
+    return;
+  }
+
+  pushUndo();
+  createFinancing(p, { amount, description, installments, interest, downPayment });
+  saveState();
+  modal('Financing').hide();
+  renderAll();
+  toast(t('financingModal.createdToast'), 'success');
+});
+
+['fcAmount', 'fcDown', 'fcInstallments', 'fcInterest'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', updateFinancingSummary);
 });
 
 /* ---------------- Tema (dark / light) ---------------- */

@@ -33,6 +33,7 @@ var I18N = {
       today: '📋 Hoje',
       profile: '👤 Meu Perfil',
       finances: '💰 Minhas Finanças',
+      financing: '💳 Financiamentos',
       cargo: '🚛 Minhas Cargas',
       employees: '👥 Meus Funcionários',
       rules: '📖 Regras da campanha',
@@ -100,7 +101,8 @@ var I18N = {
       reposition: '🧭 Registrar deslocamento vazio',
       toll: '🛣 Registrar pedágio',
       fuel: '⛽ Registrar abastecimento',
-      expense: '💸 Registrar despesa / lançamento'
+      expense: '💸 Registrar despesa / lançamento',
+      payFinancing: 'Pagar parcela ({m})'
     },
 
     checklist: {
@@ -122,6 +124,49 @@ var I18N = {
       noProfile: 'Sem perfil.',
       empty: 'Nenhum lançamento ainda. Saldo inicial: {m}.',
       dayPrefix: 'Dia {n}'
+    },
+
+    financing: {
+      header: 'Financiamentos Ativos',
+      newBtn: '+ Novo financiamento',
+      upcomingHeader: 'Próximos Pagamentos',
+      empty: 'Nenhum financiamento ativo.',
+      emptyUpcoming: 'Nenhuma parcela próxima do vencimento.',
+      locked: 'Disponível a partir do <strong>Nível 2</strong> (caminhão próprio).',
+      contractDesc: 'Descrição',
+      contractPrincipal: 'Valor financiado',
+      contractTotal: 'Total com juros',
+      contractInstallments: 'Parcelas',
+      contractPaid: 'Pagas',
+      contractRemaining: 'Restantes',
+      contractMonthly: 'Valor da parcela',
+      contractNextDay: 'Próximo vencimento (dia)',
+      contractProgress: '{paid} de {total}',
+      payBtn: 'Pagar parcela',
+      overdueBadge: 'vencida',
+      noContracts: 'Nenhum financiamento ativo.',
+      lvl2Required: 'Disponível apenas a partir do Nível 2 (caminhão próprio).'
+    },
+
+    financingModal: {
+      title: 'Novo financiamento',
+      rule: 'Regra do Tio Restanho: <strong>valor financiado + 20% ÷ 12 meses</strong>. 1 parcela a cada 30 dias.',
+      description: 'Descrição (opcional)',
+      descPh: 'Ex.: Caminhão Volvo FH16',
+      amount: 'Valor financiado (principal)',
+      downPayment: 'Entrada (opcional)',
+      installments: 'Parcelas',
+      interest: 'Juros (%)',
+      cancel: 'Cancelar',
+      confirm: 'Criar financiamento',
+      summary: 'Total com juros: <strong>{total}</strong> · Parcela: <strong>{monthly}</strong> · {installments}x',
+      amountToast: 'Informe um valor válido.',
+      createdToast: 'Financiamento criado com sucesso.'
+    },
+
+    financingAlert: {
+      overdue: '⚠️ <strong>{n} parcela(s) vencida(s)</strong> — total: {m}. Toque em "Pagar parcela" para quitar.',
+      payBtn: 'Pagar parcela'
     },
 
     cargo: {
@@ -192,7 +237,11 @@ var I18N = {
       },
       financing: {
         label: 'Financiamento (parcela)',
-        note: 'Regra: valor + 20% ÷ 12 meses, 1 parcela a cada {SALARYDAY} dias.'
+        note: 'Regra: valor + 20% ÷ 12 meses, 1 parcela a cada {SALARYDAY} dias.',
+        entry: 'Lançamento de financiamento',
+        downPayment: 'Entrada',
+        payment: 'Parcela {n} de {total}',
+        remaining: 'vencido'
       },
       repairL: {
         label: 'Conserto — acidente leve',
@@ -464,6 +513,8 @@ var I18N = {
       insuranceTitle: 'Pagar seguro',
       insuranceBody: 'Pagar {m} do seguro do veículo (ATS)?',
       lodgingTitle: 'Estadia',
+      financingPaymentTitle: 'Pagar parcela de financiamento',
+      financingPaymentBody: 'Pagar R$ {m} da parcela devida?',
       deliverTitle: 'Entregar carga',
       deliverBody: 'Entregar {from} → {to} e creditar comissão de {m}?',
       empTravelNote: 'Despesas de viagem do funcionário {name} (em trajeto).'
@@ -542,7 +593,8 @@ var I18N = {
       noCargoBase: 'Sem carga em andamento. Na base, pegue a primeira carga da sua empresa ({c}) — não escolha.',
       noCargoBranch: 'Sem carga em andamento. Vá até a filial da sua empresa ({c}) mais próxima e pegue a primeira carga disponível.',
       noCargoFree: 'Sem carga em andamento. Procure um novo frete (qualquer empresa), registre a carga e siga viagem.',
-      shiftRunning: 'Turno em andamento. Continue a rota, registre refeições/estadia e fique de olho no limite de 11h de jornada.'
+      shiftRunning: 'Turno em andamento. Continue a rota, registre refeições/estadia e fique de olho no limite de 11h de jornada.',
+      financingDue: 'Vencimento de {n} parcela(s) no total de R$ {m}'
     },
 
     entry: {
@@ -570,7 +622,11 @@ var I18N = {
       empChargesNote: '{p}% sobre o salário pago ao governo.',
       quickCovered: 'Pago pelo empregador (sem débito).',
       quickYourCost: 'Por sua conta.',
-      quickValue: 'Valor informado: {m}'
+      quickValue: 'Valor informado: {m}',
+      financingEntry: 'Financiamento: {desc}',
+      financingDownPayment: 'Entrada: R$ {m}',
+      financingPayment: 'Parcela {n} de {total}',
+      financingNote: 'Parcela {n} de {total}: R$ {m}'
     },
 
     backup: {
@@ -622,6 +678,7 @@ var I18N = {
       today: '📋 Today',
       profile: '👤 My Profile',
       finances: '💰 My Finances',
+      financing: '💳 Financings',
       cargo: '🚛 My Loads',
       employees: '👥 My Employees',
       rules: '📖 Campaign rules',
@@ -689,7 +746,8 @@ var I18N = {
       reposition: '🧭 Log empty relocation',
       toll: '🛣 Log toll',
       fuel: '⛽ Log refueling',
-      expense: '💸 Log expense / entry'
+      expense: '💸 Log expense / entry',
+      payFinancing: 'Pay installment ({m})'
     },
 
     checklist: {
@@ -711,6 +769,49 @@ var I18N = {
       noProfile: 'No profile.',
       empty: 'No entries yet. Starting balance: {m}.',
       dayPrefix: 'Day {n}'
+    },
+
+    financing: {
+      header: 'Active Financings',
+      newBtn: '+ New financing',
+      upcomingHeader: 'Upcoming Payments',
+      empty: 'No active financing.',
+      emptyUpcoming: 'No installments due soon.',
+      locked: 'Available from <strong>Level 2</strong> (own truck).',
+      contractDesc: 'Description',
+      contractPrincipal: 'Financed amount',
+      contractTotal: 'Total with interest',
+      contractInstallments: 'Installments',
+      contractPaid: 'Paid',
+      contractRemaining: 'Remaining',
+      contractMonthly: 'Installment amount',
+      contractNextDay: 'Next due (day)',
+      contractProgress: '{paid} of {total}',
+      payBtn: 'Pay installment',
+      overdueBadge: 'overdue',
+      noContracts: 'No active financing.',
+      lvl2Required: 'Available only from Level 2 (own truck).'
+    },
+
+    financingModal: {
+      title: 'New financing',
+      rule: 'Tio Restanho\'s rule: <strong>financed amount + 20% ÷ 12 months</strong>. 1 installment every 30 days.',
+      description: 'Description (optional)',
+      descPh: 'e.g. Volvo FH16 Truck',
+      amount: 'Financed amount (principal)',
+      downPayment: 'Down payment (optional)',
+      installments: 'Installments',
+      interest: 'Interest (%)',
+      cancel: 'Cancel',
+      confirm: 'Create financing',
+      summary: 'Total with interest: <strong>{total}</strong> · Installment: <strong>{monthly}</strong> · {installments}x',
+      amountToast: 'Enter a valid amount.',
+      createdToast: 'Financing created successfully.'
+    },
+
+    financingAlert: {
+      overdue: '⚠️ <strong>{n} installment(s) overdue</strong> — total: {m}. Tap "Pay installment" to settle.',
+      payBtn: 'Pay installment'
     },
 
     cargo: {
@@ -781,7 +882,11 @@ var I18N = {
       },
       financing: {
         label: 'Financing (installment)',
-        note: 'Rule: price + 20% ÷ 12 months, 1 installment every {SALARYDAY} days.'
+        note: 'Rule: price + 20% ÷ 12 months, 1 installment every {SALARYDAY} days.',
+        entry: 'Financing entry',
+        downPayment: 'Down payment',
+        payment: 'Installment {n} of {total}',
+        remaining: 'overdue'
       },
       repairL: {
         label: 'Repair — light accident',
@@ -1053,6 +1158,8 @@ var I18N = {
       insuranceTitle: 'Pay insurance',
       insuranceBody: 'Pay {m} for the ATS vehicle insurance?',
       lodgingTitle: 'Lodging',
+      financingPaymentTitle: 'Pay financing installment',
+      financingPaymentBody: 'Pay $ {m} for the overdue installment?',
       deliverTitle: 'Deliver load',
       deliverBody: 'Deliver {from} → {to} and credit the {m} commission?',
       empTravelNote: 'Travel expenses of employee {name} (in transit).'
@@ -1131,7 +1238,8 @@ var I18N = {
       noCargoBase: 'No load in progress. At base, take the first load of your company ({c}) — no picking.',
       noCargoBranch: 'No load in progress. Go to the nearest branch of your company ({c}) and take the first available load.',
       noCargoFree: 'No load in progress. Look for a new freight (any company), log the load and hit the road.',
-      shiftRunning: 'Shift in progress. Continue the route, log meals/lodging and keep an eye on the 11h work limit.'
+      shiftRunning: 'Shift in progress. Continue the route, log meals/lodging and keep an eye on the 11h work limit.',
+      financingDue: '{n} installment(s) due totaling $ {m}'
     },
 
     entry: {
@@ -1159,7 +1267,11 @@ var I18N = {
       empChargesNote: '{p}% on the salary paid to the government.',
       quickCovered: 'Paid by employer (no debit).',
       quickYourCost: 'Your cost.',
-      quickValue: 'Reported value: {m}'
+      quickValue: 'Reported value: {m}',
+      financingEntry: 'Financing: {desc}',
+      financingDownPayment: 'Down payment: $ {m}',
+      financingPayment: 'Installment {n} of {total}',
+      financingNote: 'Installment {n} of {total}: $ {m}'
     },
 
     backup: {
