@@ -156,6 +156,17 @@ body {
   max-width: 1080px;
 }
 
+.start-screen {
+  position: relative;
+}
+
+.start-screen__lang {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 5;
+}
+
 .start-screen__title {
   font-size: clamp(2rem, 5vw, 3.25rem);
   font-weight: 700;

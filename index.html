@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Campanha Realista — ETS2 / ATS</title>
+  <title data-i18n="app.title">Campanha Realista — ETS2 / ATS</title>
   <script>
     try {
       var t = localStorage.getItem('realistic_campaign_theme');
       document.documentElement.setAttribute('data-bs-theme', t === 'dark' ? 'dark' : 'light');
+      var l = localStorage.getItem('realistic_campaign_lang');
+      document.documentElement.setAttribute('lang', l === 'en' ? 'en' : 'pt-BR');
     } catch (e) {
       document.documentElement.setAttribute('data-bs-theme', 'light');
     }
@@ -23,11 +25,18 @@
 
   <!-- START SCREEN (sem perfil ativo) -->
   <section id="startScreen" class="start-screen d-none">
+    <div class="start-screen__lang">
+      <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" id="btnLangStart" data-bs-toggle="dropdown" aria-expanded="false">🌐</button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><button class="dropdown-item" type="button" data-lang="pt">🇧🇷 Português</button></li>
+        <li><button class="dropdown-item" type="button" data-lang="en">🇺🇸 English</button></li>
+      </ul>
+    </div>
     <div class="start-screen__inner">
-      <h1 class="start-screen__title text-center">&#128663; Campanha Realista</h1>
-      <p class="start-screen__subtitle text-muted text-center mb-4">ETS2 / ATS</p>
+      <h1 class="start-screen__title text-center" data-i18n="start.title">&#128663; Campanha Realista</h1>
+      <p class="start-screen__subtitle text-muted text-center mb-4" data-i18n="start.subtitle">ETS2 / ATS</p>
 
-      <p class="start-screen__intro mx-auto mb-4">
+      <p class="start-screen__intro mx-auto mb-4" data-i18n-html="start.intro">
         Este é o <strong>caderno digital</strong> da sua Campanha Realista no Euro Truck Simulator 2 / American Truck Simulator.
         No lugar do papel e da caneta, você registra <strong>cargas, refeições, estadia, despesas, salários e funcionários</strong>,
         mantém o <strong>controle do dinheiro por nível</strong> (como nas regras do Tio Restanho) e o app
@@ -41,8 +50,8 @@
               <div class="card start-card h-100">
                 <div class="card-body">
                   <div class="start-card__icon">📋</div>
-                  <h6 class="fw-bold mb-1">Hoje</h6>
-                  <p class="small text-muted mb-0">Sugere a próxima ação do turno e registra refeições, estadia e o avanço do relógio com <code>g_set_time</code>.</p>
+                  <h6 class="fw-bold mb-1" data-i18n="start.cardTodayTitle">Hoje</h6>
+                  <p class="small text-muted mb-0" data-i18n-html="start.cardTodayDesc">Sugere a próxima ação do turno e registra refeições, estadia e o avanço do relógio com <code>g_set_time</code>.</p>
                 </div>
               </div>
             </div>
@@ -50,8 +59,8 @@
               <div class="card start-card h-100">
                 <div class="card-body">
                   <div class="start-card__icon">💰</div>
-                  <h6 class="fw-bold mb-1">Finanças</h6>
-                  <p class="small text-muted mb-0">Saldo, salários, comissões, financiamentos, pedágios e multas — tudo controlado por nível.</p>
+                  <h6 class="fw-bold mb-1" data-i18n="start.cardFinTitle">Finanças</h6>
+                  <p class="small text-muted mb-0" data-i18n="start.cardFinDesc">Saldo, salários, comissões, financiamentos, pedágios e multas — tudo controlado por nível.</p>
                 </div>
               </div>
             </div>
@@ -59,8 +68,8 @@
               <div class="card start-card h-100">
                 <div class="card-body">
                   <div class="start-card__icon">🚛</div>
-                  <h6 class="fw-bold mb-1">Cargas</h6>
-                  <p class="small text-muted mb-0">Registre fretes e deslocamentos vazios, acompanhe cada viagem e o retorno que ela gera.</p>
+                  <h6 class="fw-bold mb-1" data-i18n="start.cardCargoTitle">Cargas</h6>
+                  <p class="small text-muted mb-0" data-i18n="start.cardCargoDesc">Registre fretes e deslocamentos vazios, acompanhe cada viagem e o retorno que ela gera.</p>
                 </div>
               </div>
             </div>
@@ -68,28 +77,28 @@
               <div class="card start-card h-100">
                 <div class="card-body">
                   <div class="start-card__icon">👥</div>
-                  <h6 class="fw-bold mb-1">Funcionários</h6>
-                  <p class="small text-muted mb-0">No Nível 4, contrate motoristas, pague salários e ganhe comissão sobre os fretes deles.</p>
+                  <h6 class="fw-bold mb-1" data-i18n="start.cardEmpTitle">Funcionários</h6>
+                  <p class="small text-muted mb-0" data-i18n="start.cardEmpDesc">No Nível 4, contrate motoristas, pague salários e ganhe comissão sobre os fretes deles.</p>
                 </div>
               </div>
             </div>
           </div>
           <div class="start-levels mt-3">
-            <span class="start-level">1 · Empregado</span>
+            <span class="start-level">1 · <span data-i18n="common.level.1">Empregado</span></span>
             <span class="start-level__arrow">→</span>
-            <span class="start-level">2 · Empregado c/ caminhão</span>
+            <span class="start-level">2 · <span data-i18n="common.level.2">Empregado c/ caminhão</span></span>
             <span class="start-level__arrow">→</span>
-            <span class="start-level">3 · Autônomo</span>
+            <span class="start-level">3 · <span data-i18n="common.level.3">Autônomo</span></span>
             <span class="start-level__arrow">→</span>
-            <span class="start-level">4 · Empresário</span>
+            <span class="start-level">4 · <span data-i18n="common.level.4">Empresário</span></span>
           </div>
         </div>
         <div class="col-lg-6">
           <div class="card start-video shadow-sm h-100">
-            <div class="card-header fw-bold">▶ Vídeo base da campanha — Tio Restanho</div>
+            <div class="card-header fw-bold" data-i18n="start.videoTitle">▶ Vídeo base da campanha — Tio Restanho</div>
             <div class="card-body p-2">
               <div class="ratio ratio-16x9">
-                <iframe src="https://www.youtube.com/embed/KSi3pItHPvw" title="Como fazer uma carreira realista no Euro Truck Simulator 2 / American Truck Simulator — Tio Restanho" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+                <iframe src="https://www.youtube.com/embed/KSi3pItHPvw" title="Como fazer uma carreira realista no Euro Truck Simulator 2 / American Truck Simulator — Tio Restanho" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" data-i18n-title="start.videoIframeTitle"></iframe>
               </div>
             </div>
           </div>
@@ -97,12 +106,12 @@
       </div>
 
       <div class="d-flex flex-column flex-lg-row gap-3 justify-content-center">
-        <button class="btn btn-primary btn-lg px-4" id="btnStartIniciar">▶ Iniciar</button>
-        <button class="btn btn-outline-secondary btn-lg px-4" id="btnStartSetup">🎮 Setup do jogo</button>
-        <button class="btn btn-outline-secondary btn-lg px-4" id="btnStartConfig">⚙️ Configurações</button>
+        <button class="btn btn-primary btn-lg px-4" id="btnStartIniciar" data-i18n="start.startBtn">▶ Iniciar</button>
+        <button class="btn btn-outline-secondary btn-lg px-4" id="btnStartSetup" data-i18n="start.setupBtn">🎮 Setup do jogo</button>
+        <button class="btn btn-outline-secondary btn-lg px-4" id="btnStartConfig" data-i18n="start.configBtn">⚙️ Configurações</button>
       </div>
       <div class="text-center mt-4">
-        <button type="button" class="btn btn-link btn-sm p-0 text-secondary" id="startAppVersion" title="Ver changelog" style="text-decoration:none"></button>
+        <button type="button" class="btn btn-link btn-sm p-0 text-secondary" id="startAppVersion" title="Ver changelog" data-i18n-title="changelog.see" style="text-decoration:none"></button>
       </div>
     </div>
   </section>
@@ -111,8 +120,8 @@
   <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">&#128663; Campanha Realista</a><button type="button" class="navbar-text small text-secondary ms-2 d-none d-lg-inline p-0 border-0 bg-transparent" id="appVersion" title="Ver changelog" style="cursor:pointer"></button>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Menu">
+      <a class="navbar-brand fw-bold" href="#" data-i18n="nav.brand">&#128663; Campanha Realista</a><button type="button" class="navbar-text small text-secondary ms-2 d-none d-lg-inline p-0 border-0 bg-transparent" id="appVersion" title="Ver changelog" data-i18n-title="changelog.see" style="cursor:pointer"></button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Menu" data-i18n-aria="tabs.ariaMenu">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navMenu">
@@ -122,13 +131,20 @@
             <ul class="dropdown-menu dropdown-menu-dark" id="profileList"></ul>
           </li>
           <li class="nav-item ms-lg-2">
-            <button class="btn btn-outline-light btn-sm" id="btnNewProfile">+ Novo Perfil</button>
+            <button class="btn btn-outline-light btn-sm" id="btnNewProfile" data-i18n="nav.newProfile">+ Novo Perfil</button>
           </li>
         </ul>
         <div class="d-flex gap-2">
-          <button class="btn btn-outline-light btn-sm" id="btnUndo" title="Desfazer última ação" style="display:none">↩ Desfazer última ação</button>
-          <button class="btn btn-outline-light btn-sm" id="btnLogout" title="Voltar à tela inicial">⏻ Sair</button>
-          <button class="btn btn-outline-light btn-sm" id="btnTheme" title="Alternar tema">🌙</button>
+          <button class="btn btn-outline-light btn-sm" id="btnUndo" title="Desfazer última ação" data-i18n-title="nav.undo" style="display:none"><span data-i18n="nav.undo">Desfazer última ação</span></button>
+          <button class="btn btn-outline-light btn-sm" id="btnLogout" title="Voltar à tela inicial" data-i18n-title="nav.logoutTitle">⏻ <span data-i18n="nav.logoutText">Sair</span></button>
+          <button class="btn btn-outline-light btn-sm" id="btnTheme" title="Alternar tema" data-i18n-title="nav.themeTitle">🌙</button>
+          <div class="btn-group">
+            <button class="btn btn-outline-light btn-sm dropdown-toggle" id="btnLang" data-bs-toggle="dropdown" aria-expanded="false" title="Idioma" data-i18n-title="nav.langTitle">🌐</button>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+              <li><button class="dropdown-item" type="button" data-lang="pt">🇧🇷 Português</button></li>
+              <li><button class="dropdown-item" type="button" data-lang="en">🇺🇸 English</button></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -139,22 +155,22 @@
     <!-- ABAS PRINCIPAIS -->
     <ul class="nav nav-tabs main-tabs mb-3" id="mainTabs" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="tab-hoje-tab" data-bs-toggle="tab" data-bs-target="#tab-hoje" type="button" role="tab" aria-controls="tab-hoje" aria-selected="true">📋 Hoje</button>
+        <button class="nav-link active" id="tab-hoje-tab" data-bs-toggle="tab" data-bs-target="#tab-hoje" type="button" role="tab" aria-controls="tab-hoje" aria-selected="true" data-i18n="tabs.today">📋 Hoje</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-perfil-tab" data-bs-toggle="tab" data-bs-target="#tab-perfil" type="button" role="tab" aria-controls="tab-perfil" aria-selected="false">👤 Meu Perfil</button>
+        <button class="nav-link" id="tab-perfil-tab" data-bs-toggle="tab" data-bs-target="#tab-perfil" type="button" role="tab" aria-controls="tab-perfil" aria-selected="false" data-i18n="tabs.profile">👤 Meu Perfil</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-financas-tab" data-bs-toggle="tab" data-bs-target="#tab-financas" type="button" role="tab" aria-controls="tab-financas" aria-selected="false">💰 Minhas Finanças</button>
+        <button class="nav-link" id="tab-financas-tab" data-bs-toggle="tab" data-bs-target="#tab-financas" type="button" role="tab" aria-controls="tab-financas" aria-selected="false" data-i18n="tabs.finances">💰 Minhas Finanças</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-cargas-tab" data-bs-toggle="tab" data-bs-target="#tab-cargas" type="button" role="tab" aria-controls="tab-cargas" aria-selected="false">🚛 Minhas Cargas</button>
+        <button class="nav-link" id="tab-cargas-tab" data-bs-toggle="tab" data-bs-target="#tab-cargas" type="button" role="tab" aria-controls="tab-cargas" aria-selected="false" data-i18n="tabs.cargo">🚛 Minhas Cargas</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-funcionarios-tab" data-bs-toggle="tab" data-bs-target="#tab-funcionarios" type="button" role="tab" aria-controls="tab-funcionarios" aria-selected="false">👥 Meus Funcionários</button>
+        <button class="nav-link" id="tab-funcionarios-tab" data-bs-toggle="tab" data-bs-target="#tab-funcionarios" type="button" role="tab" aria-controls="tab-funcionarios" aria-selected="false" data-i18n="tabs.employees">👥 Meus Funcionários</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-regras-tab" data-bs-toggle="tab" data-bs-target="#tab-regras" type="button" role="tab" aria-controls="tab-regras" aria-selected="false">📖 Regras da campanha</button>
+        <button class="nav-link" id="tab-regras-tab" data-bs-toggle="tab" data-bs-target="#tab-regras" type="button" role="tab" aria-controls="tab-regras" aria-selected="false" data-i18n="tabs.rules">📖 Regras da campanha</button>
       </li>
     </ul>
 
@@ -166,13 +182,13 @@
         <div class="row g-3">
           <div class="col-lg-6">
             <div class="card shadow-sm h-100">
-              <div class="card-header fw-bold">Ações rápidas</div>
+              <div class="card-header fw-bold" data-i18n="today.actionsHeader">Ações rápidas</div>
               <div class="card-body" id="actionPanel"></div>
             </div>
           </div>
           <div class="col-lg-6">
             <div class="card shadow-sm h-100">
-              <div class="card-header fw-bold">Checklist do dia</div>
+              <div class="card-header fw-bold" data-i18n="today.checklistHeader">Checklist do dia</div>
               <div class="card-body" id="checklistPanel"></div>
             </div>
           </div>
@@ -185,20 +201,20 @@
           <div class="col-lg-4">
             <div class="card shadow-sm h-100">
               <div class="card-header d-flex justify-content-between align-items-center">
-                <span class="fw-bold">Saldo</span>
+                <span class="fw-bold" data-i18n="fin.balanceHeader">Saldo</span>
                 <span id="balanceBadge" class="badge"></span>
               </div>
               <div class="card-body text-center">
                 <div class="display-6 fw-bold" id="balanceValue">—</div>
-                <small class="text-muted">Saldo inicial: <span id="startBalanceValue"></span></small>
+                <small class="text-muted"><span data-i18n="fin.initialBalance">Saldo inicial:</span> <span id="startBalanceValue"></span></small>
               </div>
             </div>
           </div>
           <div class="col-lg-8">
             <div class="card shadow-sm h-100">
               <div class="card-header d-flex justify-content-between align-items-center">
-                <span class="fw-bold">Extrato</span>
-                <button class="btn btn-sm btn-outline-primary" data-act="expense">+ Nova despesa / entrada</button>
+                <span class="fw-bold" data-i18n="fin.ledgerHeader">Extrato</span>
+                <button class="btn btn-sm btn-outline-primary" data-act="expense" data-i18n="fin.newEntry">+ Nova despesa / entrada</button>
               </div>
               <div class="card-body p-0 ledger-scroll" id="ledgerPanel"></div>
             </div>
@@ -210,8 +226,8 @@
       <div class="tab-pane fade" id="tab-cargas" role="tabpanel" aria-labelledby="tab-cargas-tab">
         <div class="card shadow-sm">
 <div class="card-header d-flex justify-content-between align-items-center">
-          <span class="fw-bold">Cargas</span>
-          <button class="btn btn-sm btn-outline-primary" id="btnNewLoad" data-act="cargo">➕ Nova carga</button>
+          <span class="fw-bold" data-i18n="cargo.header">Cargas</span>
+          <button class="btn btn-sm btn-outline-primary" id="btnNewLoad" data-act="cargo" data-i18n="cargo.newBtn">➕ Nova carga</button>
         </div>
           <div class="card-body p-0" id="cargoPanel"></div>
         </div>
@@ -221,8 +237,8 @@
       <div class="tab-pane fade" id="tab-funcionarios" role="tabpanel" aria-labelledby="tab-funcionarios-tab">
         <div class="card shadow-sm">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <span class="fw-bold">Funcionários</span>
-            <button class="btn btn-sm btn-outline-primary" id="btnAddEmployee">+ Adicionar</button>
+            <span class="fw-bold" data-i18n="emp.header">Funcionários</span>
+            <button class="btn btn-sm btn-outline-primary" id="btnAddEmployee" data-i18n="emp.addBtn">+ Adicionar</button>
           </div>
           <div class="card-body p-0" id="employeePanel"></div>
         </div>
@@ -231,12 +247,12 @@
       <!-- ============ REGRAS & CONSOLE ============ -->
       <div class="tab-pane fade" id="tab-regras" role="tabpanel" aria-labelledby="tab-regras-tab">
         <div class="card shadow-sm">
-          <div class="card-header fw-bold">Regras da campanha</div>
+          <div class="card-header fw-bold" data-i18n="rules.header">Regras da campanha</div>
           <div class="card-body p-0">
             <div class="accordion accordion-flush" id="rulesAccordion">
               <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rulesSetup">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rulesSetup" data-i18n="rules.cmdAccordion">
                     Comandos da campanha
                   </button>
                 </h2>
@@ -246,7 +262,7 @@
               </div>
               <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rulesCustos">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rulesCustos" data-i18n="rules.costAccordion">
                     Custos e turno
                   </button>
                 </h2>
@@ -256,7 +272,7 @@
               </div>
               <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rulesNiveis">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rulesNiveis" data-i18n="rules.levelAccordion">
                     Níveis 1–4
                   </button>
                 </h2>
@@ -274,46 +290,46 @@
         <div class="row justify-content-center">
           <div class="col-lg-6">
             <div class="card shadow-sm">
-              <div class="card-header fw-bold">Perfil da campanha</div>
+              <div class="card-header fw-bold" data-i18n="profile.header">Perfil da campanha</div>
               <div class="card-body">
                 <div class="mb-3">
-                  <label class="form-label">Nome do perfil</label>
+                  <label class="form-label" data-i18n="profile.name">Nome do perfil</label>
                   <input type="text" class="form-control" id="cfgName">
                 </div>
                 <div class="mb-3">
-                  <label class="form-label">Jogo</label>
+                  <label class="form-label" data-i18n="profile.game">Jogo</label>
                   <select class="form-select" id="cfgGame">
-                    <option value="ATS">American Truck Simulator (US$)</option>
-                    <option value="ETS2">Euro Truck Simulator 2 (€)</option>
+                    <option value="ATS" data-i18n="profile.gameAts">American Truck Simulator (US$)</option>
+                    <option value="ETS2" data-i18n="profile.gameEts2">Euro Truck Simulator 2 (€)</option>
                   </select>
                 </div>
                 <div class="row g-2 mb-3">
                   <div class="col">
-                    <label class="form-label">Cidade-base</label>
+                    <label class="form-label" data-i18n="profile.baseCity">Cidade-base</label>
                     <div class="city-combo">
-                      <input type="text" class="form-control city-combo-input" id="cfgCity" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
-                      <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+                      <input type="text" class="form-control city-combo-input" id="cfgCity" placeholder="Digite para buscar…" data-i18n-ph="combo.ph" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                      <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades" data-i18n-aria="combo.citiesAria"></ul>
                     </div>
                   </div>
                   <div class="col">
-                    <label class="form-label">Empresa</label>
+                    <label class="form-label" data-i18n="profile.company">Empresa</label>
                     <div class="city-combo">
-                      <input type="text" class="form-control city-combo-input" id="cfgCompany" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
-                      <ul class="city-combo-list d-none" role="listbox" aria-label="Empresas"></ul>
+                      <input type="text" class="form-control city-combo-input" id="cfgCompany" placeholder="Digite para buscar…" data-i18n-ph="combo.ph" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                      <ul class="city-combo-list d-none" role="listbox" aria-label="Empresas" data-i18n-aria="combo.companiesAria"></ul>
                     </div>
                   </div>
                 </div>
                 <div class="mb-3">
-                  <label class="form-label">Saldo inicial (aplicado apenas se o extrato estiver vazio)</label>
+                  <label class="form-label" data-i18n="profile.startBalance">Saldo inicial (aplicado apenas se o extrato estiver vazio)</label>
                   <input type="number" class="form-control" id="cfgStart">
                 </div>
                 <div class="alert alert-danger py-2 small mb-0" id="cfgDeleteWrap">
-                  <button class="btn btn-danger btn-sm" id="btnDeleteProfile">Excluir perfil</button>
+                  <button class="btn btn-danger btn-sm" id="btnDeleteProfile" data-i18n="profile.delete">Excluir perfil</button>
                 </div>
               </div>
               <div class="card-footer d-flex justify-content-end gap-2">
-                <button class="btn btn-outline-success" data-act="level">Mudar nível</button>
-                <button class="btn btn-primary" id="btnSaveSettings">Salvar</button>
+                <button class="btn btn-outline-success" data-act="level" data-i18n="profile.changeLevel">Mudar nível</button>
+                <button class="btn btn-primary" id="btnSaveSettings" data-i18n="profile.save">Salvar</button>
               </div>
             </div>
           </div>
@@ -332,17 +348,17 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Iniciar campanha</h5>
+          <h5 class="modal-title" data-i18n="selectProfile.title">Iniciar campanha</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div id="profileSelectList" class="list-group mb-3"></div>
           <div class="d-grid">
-            <button class="btn btn-outline-primary" id="btnSelectNewProfile">+ Criar novo perfil</button>
+            <button class="btn btn-outline-primary" id="btnSelectNewProfile" data-i18n="selectProfile.newBtn">+ Criar novo perfil</button>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="selectProfile.cancel">Cancelar</button>
         </div>
       </div>
     </div>
@@ -353,12 +369,12 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Setup do jogo</h5>
+          <h5 class="modal-title" data-i18n="startSetup.title">Setup do jogo</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body small" id="startSetupBody"></div>
         <div class="modal-footer">
-          <button class="btn btn-primary" data-bs-dismiss="modal">Entendi</button>
+          <button class="btn btn-primary" data-bs-dismiss="modal" data-i18n="startSetup.ok">Entendi</button>
         </div>
       </div>
     </div>
@@ -369,21 +385,21 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">⚙️ Configurações globais</h5>
+          <h5 class="modal-title" data-i18n="config.title">⚙️ Configurações globais</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="row g-3">
             <div class="col-lg-6">
               <div class="card shadow-sm mb-3">
-                <div class="card-header fw-bold">Refeições (ações rápidas)</div>
+                <div class="card-header fw-bold" data-i18n="config.mealsHeader">Refeições (ações rápidas)</div>
                 <div class="card-body">
                   <div class="row g-2 align-items-center small text-muted fw-bold mb-1">
-                    <div class="col-2">Ação</div>
-                    <div class="col-3">Início da janela</div>
-                    <div class="col-3">Fim da janela</div>
-                    <div class="col-2">Duração (min)</div>
-                    <div class="col-2">Valor</div>
+                    <div class="col-2" data-i18n="config.colAction">Ação</div>
+                    <div class="col-3" data-i18n="config.colStart">Início da janela</div>
+                    <div class="col-3" data-i18n="config.colEnd">Fim da janela</div>
+                    <div class="col-2" data-i18n="config.colDuration">Duração (min)</div>
+                    <div class="col-2" data-i18n="config.colAmount">Valor</div>
                   </div>
                   <div class="row g-2 align-items-center mb-2">
                     <div class="col-2"><input type="text" class="form-control form-control-sm" id="cfg-meal-breakfast-label"></div>
@@ -410,15 +426,15 @@
               </div>
 
               <div class="card shadow-sm mb-3">
-                <div class="card-header fw-bold">Estadia</div>
+                <div class="card-header fw-bold" data-i18n="config.lodgingHeader">Estadia</div>
                 <div class="card-body">
                   <div class="row g-2">
                     <div class="col-6">
-                      <label class="form-label">Valor da estadia</label>
+                      <label class="form-label" data-i18n="config.lodgingAmount">Valor da estadia</label>
                       <input type="number" class="form-control" id="cfg-lodging-amount" min="0" step="0.01">
                     </div>
                     <div class="col-6">
-                      <label class="form-label">Avançar para o dia seguinte às</label>
+                      <label class="form-label" data-i18n="config.lodgingNext">Avançar para o dia seguinte às</label>
                       <input type="time" class="form-control" id="cfg-lodging-nextday">
                     </div>
                   </div>
@@ -426,23 +442,23 @@
               </div>
 
               <div class="card shadow-sm">
-                <div class="card-header fw-bold">Turno & tempos</div>
+                <div class="card-header fw-bold" data-i18n="config.shiftHeader">Turno & tempos</div>
                 <div class="card-body">
                   <div class="row g-2">
                     <div class="col-6">
-                      <label class="form-label">Início do turno</label>
+                      <label class="form-label" data-i18n="config.shiftStart">Início do turno</label>
                       <input type="time" class="form-control" id="cfg-turno-start">
                     </div>
                     <div class="col-6">
-                      <label class="form-label">Fim de turno (empregado)</label>
+                      <label class="form-label" data-i18n="config.shiftEnd">Fim de turno (empregado)</label>
                       <input type="time" class="form-control" id="cfg-turno-employee-end">
                     </div>
                     <div class="col-6">
-                      <label class="form-label">Descanso (autônomo)</label>
+                      <label class="form-label" data-i18n="config.shiftRest">Descanso (autônomo)</label>
                       <input type="time" class="form-control" id="cfg-turno-free-rest">
                     </div>
                     <div class="col-6">
-                      <label class="form-label">Descarga (min)</label>
+                      <label class="form-label" data-i18n="config.shiftDelivery">Descarga (min)</label>
                       <input type="number" class="form-control" id="cfg-turno-delivery" min="0">
                     </div>
                   </div>
@@ -452,77 +468,77 @@
 
             <div class="col-lg-6">
               <div class="card shadow-sm h-100">
-                <div class="card-header fw-bold">Finanças</div>
+                <div class="card-header fw-bold" data-i18n="config.finHeader">Finanças</div>
                 <div class="card-body">
                   <div class="row g-2 mb-2">
                     <div class="col-6">
-                      <label class="form-label">Dia do pagamento (salário/seguro/encargos)</label>
+                      <label class="form-label" data-i18n="config.payDay">Dia do pagamento (salário/seguro/encargos)</label>
                       <input type="number" class="form-control" id="cfg-salary-day" min="1" max="90">
                     </div>
                   </div>
                   <div class="row g-2 mb-2">
                     <div class="col-3">
-                      <label class="form-label">Salário N1</label>
+                      <label class="form-label" data-i18n="config.salaryN" data-i18n-var-n="1">Salário N1</label>
                       <input type="number" class="form-control" id="cfg-salary-1" min="0">
                     </div>
                     <div class="col-3">
-                      <label class="form-label">Salário N2</label>
+                      <label class="form-label" data-i18n="config.salaryN" data-i18n-var-n="2">Salário N2</label>
                       <input type="number" class="form-control" id="cfg-salary-2" min="0">
                     </div>
                     <div class="col-3">
-                      <label class="form-label">Salário N3</label>
+                      <label class="form-label" data-i18n="config.salaryN" data-i18n-var-n="3">Salário N3</label>
                       <input type="number" class="form-control" id="cfg-salary-3" min="0">
                     </div>
                     <div class="col-3">
-                      <label class="form-label">Salário N4</label>
+                      <label class="form-label" data-i18n="config.salaryN" data-i18n-var-n="4">Salário N4</label>
                       <input type="number" class="form-control" id="cfg-salary-4" min="0">
                     </div>
                   </div>
                   <div class="row g-2 mb-2">
                     <div class="col-3">
-                      <label class="form-label">Comissão N1 (%)</label>
+                      <label class="form-label" data-i18n="config.commN" data-i18n-var-n="1">Comissão N1 (%)</label>
                       <input type="number" class="form-control" id="cfg-comm-1" min="0" max="100">
                     </div>
                     <div class="col-3">
-                      <label class="form-label">Comissão N2 (%)</label>
+                      <label class="form-label" data-i18n="config.commN" data-i18n-var-n="2">Comissão N2 (%)</label>
                       <input type="number" class="form-control" id="cfg-comm-2" min="0" max="100">
                     </div>
                     <div class="col-3">
-                      <label class="form-label">Comissão N3 (%)</label>
+                      <label class="form-label" data-i18n="config.commN" data-i18n-var-n="3">Comissão N3 (%)</label>
                       <input type="number" class="form-control" id="cfg-comm-3" min="0" max="100">
                     </div>
                     <div class="col-3">
-                      <label class="form-label">Comissão N4 (%)</label>
+                      <label class="form-label" data-i18n="config.commN" data-i18n-var-n="4">Comissão N4 (%)</label>
                       <input type="number" class="form-control" id="cfg-comm-4" min="0" max="100">
                     </div>
                   </div>
                   <div class="row g-2 mb-2">
                     <div class="col-6">
-                      <label class="form-label">Tag (pedágio automático) por país</label>
+                      <label class="form-label" data-i18n="config.tagLabel">Tag (pedágio automático) por país</label>
                       <input type="number" class="form-control" id="cfg-tag" min="0" step="0.01">
                     </div>
                     <div class="col-6">
-                      <label class="form-label">Seguro ATS (a cada período)</label>
+                      <label class="form-label" data-i18n="config.insuranceLabel">Seguro ATS (a cada período)</label>
                       <input type="number" class="form-control" id="cfg-insurance" min="0" step="0.01">
                     </div>
                   </div>
                   <div class="row g-2 mb-2">
                     <div class="col-4">
-                      <label class="form-label">Salário do funcionário</label>
+                      <label class="form-label" data-i18n="config.empSalary">Salário do funcionário</label>
                       <input type="number" class="form-control" id="cfg-emp-salary" min="0">
                     </div>
                     <div class="col-4">
-                      <label class="form-label">Encargos do funcionário (%)</label>
+                      <label class="form-label" data-i18n="config.empCharges">Encargos do funcionário (%)</label>
                       <input type="number" class="form-control" id="cfg-emp-charges" min="0" max="100">
                     </div>
                     <div class="col-4">
-                      <label class="form-label">Comissão do funcionário (%)</label>
+                      <label class="form-label" data-i18n="config.empCommission">Comissão do funcionário (%)</label>
                       <input type="number" class="form-control" id="cfg-emp-commission" min="0" max="100">
                     </div>
                   </div>
                   <div class="d-flex flex-wrap gap-2 justify-content-end mt-3">
-                    <button class="btn btn-outline-secondary" id="btnResetConfig">Restaurar padrões</button>
-                    <button class="btn btn-primary" id="btnSaveConfig">Salvar configurações</button>
+                    <button class="btn btn-outline-secondary" id="btnResetConfig" data-i18n="config.resetBtn">Restaurar padrões</button>
+                    <button class="btn btn-primary" id="btnSaveConfig" data-i18n="config.saveBtn">Salvar configurações</button>
                   </div>
                 </div>
               </div>
@@ -531,13 +547,13 @@
         </div>
         <div class="modal-footer flex-wrap gap-2">
           <div class="d-flex flex-wrap align-items-center gap-2 me-auto small text-muted">
-            <span><i>Backup multi-dispositivo:</i></span>
+            <span><i data-i18n="config.backupLabel">Backup multi-dispositivo:</i></span>
             <span class="text-muted small" id="backupVersion"></span>
-            <button class="btn btn-outline-info btn-sm" id="btnExport" title="Exportar todos os perfis e configurações em um arquivo .json">⬇ Exportar JSON</button>
-            <button class="btn btn-outline-info btn-sm" id="btnImport" title="Importar perfis e configurações de um arquivo .json">⬆ Importar JSON</button>
+            <button class="btn btn-outline-info btn-sm" id="btnExport" title="Exportar todos os perfis e configurações em um arquivo .json" data-i18n-title="config.exportTitle" data-i18n="config.exportBtn">⬇ Exportar JSON</button>
+            <button class="btn btn-outline-info btn-sm" id="btnImport" title="Importar perfis e configurações de um arquivo .json" data-i18n-title="config.importTitle" data-i18n="config.importBtn">⬆ Importar JSON</button>
             <input type="file" id="importFile" accept=".json,application/json" class="d-none">
           </div>
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="config.close">Fechar</button>
         </div>
       </div>
     </div>
@@ -548,26 +564,26 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Novo perfil de campanha</h5>
+          <h5 class="modal-title" data-i18n="newProfile.title">Novo perfil de campanha</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Nome do perfil</label>
-            <input type="text" class="form-control" id="npName" placeholder="Ex.: Campanha ATS - San Diego">
+            <label class="form-label" data-i18n="newProfile.name">Nome do perfil</label>
+            <input type="text" class="form-control" id="npName" placeholder="Ex.: Campanha ATS - San Diego" data-i18n-ph="newProfile.namePh">
           </div>
           <div class="mb-3">
-            <label class="form-label">Jogo</label>
+            <label class="form-label" data-i18n="newProfile.game">Jogo</label>
             <select class="form-select" id="npGame">
-              <option value="ATS">American Truck Simulator (US$)</option>
-              <option value="ETS2">Euro Truck Simulator 2 (€)</option>
+              <option value="ATS" data-i18n="profile.gameAts">American Truck Simulator (US$)</option>
+              <option value="ETS2" data-i18n="profile.gameEts2">Euro Truck Simulator 2 (€)</option>
             </select>
           </div>
           <p class="small text-muted mb-0" id="npHint">Saldo inicial: $5.000. Cidade-base e empresa serão definidas em seguida.</p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-primary" id="btnCreateProfile">Criar perfil</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="newProfile.cancel">Cancelar</button>
+          <button class="btn btn-primary" id="btnCreateProfile" data-i18n="newProfile.create">Criar perfil</button>
         </div>
       </div>
     </div>
@@ -578,50 +594,50 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Registrar carga</h5>
+          <h5 class="modal-title" data-i18n="cargoModal.title">Registrar carga</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="alert alert-info py-2 small" id="cargoHint"></div>
           <div class="mb-3" id="driverWrap">
-            <label class="form-label">Motorista</label>
+            <label class="form-label" data-i18n="cargoModal.driver">Motorista</label>
             <select class="form-select" id="cgDriver"></select>
           </div>
           <div class="row g-2 mb-3">
             <div class="col">
-              <label class="form-label">Origem</label>
+              <label class="form-label" data-i18n="cargoModal.origin">Origem</label>
               <div class="city-combo">
-                <input type="text" class="form-control city-combo-input" id="cgFrom" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
-                <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+                <input type="text" class="form-control city-combo-input" id="cgFrom" placeholder="Digite para buscar…" data-i18n-ph="combo.ph" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades" data-i18n-aria="combo.citiesAria"></ul>
               </div>
             </div>
             <div class="col">
-              <label class="form-label">Destino</label>
+              <label class="form-label" data-i18n="cargoModal.dest">Destino</label>
               <div class="city-combo">
-                <input type="text" class="form-control city-combo-input" id="cgTo" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
-                <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+                <input type="text" class="form-control city-combo-input" id="cgTo" placeholder="Digite para buscar…" data-i18n-ph="combo.ph" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades" data-i18n-aria="combo.citiesAria"></ul>
               </div>
             </div>
           </div>
           <div class="row g-2 mb-3">
             <div class="col">
-              <label class="form-label">Distância (km)</label>
+              <label class="form-label" data-i18n="cargoModal.distance">Distância (km)</label>
               <input type="number" class="form-control" id="cgDist" min="0">
             </div>
             <div class="col">
-              <label class="form-label">Valor do frete</label>
+              <label class="form-label" data-i18n="cargoModal.freight">Valor do frete</label>
               <input type="number" class="form-control" id="cgFreight" min="0">
             </div>
             <div class="col">
-              <label class="form-label">Hora de saída</label>
+              <label class="form-label" data-i18n="cargoModal.time">Hora de saída</label>
               <input type="time" class="form-control" id="cgTime">
             </div>
           </div>
-          <div class="small text-muted">Sua comissão: <b id="cgPct"></b> do frete.</div>
+          <div class="small text-muted"><span data-i18n="cargoModal.commissionLabel">Sua comissão:</span> <b id="cgPct"></b> <span data-i18n="cargoModal.ofFreight">do frete.</span></div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-primary" id="btnSaveCargo">Iniciar viagem</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="cargoModal.cancel">Cancelar</button>
+          <button class="btn btn-primary" id="btnSaveCargo" data-i18n="cargoModal.start">Iniciar viagem</button>
         </div>
       </div>
     </div>
@@ -632,39 +648,39 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Deslocamento vazio</h5>
+          <h5 class="modal-title" data-i18n="repositionModal.title">Deslocamento vazio</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Origem</label>
+            <label class="form-label" data-i18n="repositionModal.origin">Origem</label>
             <div class="city-combo">
-              <input type="text" class="form-control city-combo-input" id="rpFrom" disabled placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
-              <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+              <input type="text" class="form-control city-combo-input" id="rpFrom" disabled placeholder="Digite para buscar…" data-i18n-ph="combo.ph" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+              <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades" data-i18n-aria="combo.citiesAria"></ul>
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Destino</label>
+            <label class="form-label" data-i18n="repositionModal.dest">Destino</label>
             <div class="city-combo">
-              <input type="text" class="form-control city-combo-input" id="rpTo" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
-              <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+              <input type="text" class="form-control city-combo-input" id="rpTo" placeholder="Digite para buscar…" data-i18n-ph="combo.ph" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+              <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades" data-i18n-aria="combo.citiesAria"></ul>
             </div>
           </div>
           <div class="row g-2 mb-3">
             <div class="col">
-              <label class="form-label">Hora de saída</label>
+              <label class="form-label" data-i18n="repositionModal.dep">Hora de saída</label>
               <input type="time" class="form-control" id="rpTime">
             </div>
             <div class="col">
-              <label class="form-label">Hora de chegada</label>
+              <label class="form-label" data-i18n="repositionModal.arr">Hora de chegada</label>
               <input type="time" class="form-control" id="rpTimeIn">
             </div>
           </div>
           <div class="alert alert-light border small mb-0" id="rpHint"></div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-primary" id="btnSaveReposition">Confirmar</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="repositionModal.cancel">Cancelar</button>
+          <button class="btn btn-primary" id="btnSaveReposition" data-i18n="repositionModal.confirm">Confirmar</button>
         </div>
       </div>
     </div>
@@ -675,49 +691,49 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Registrar despesa / entrada</h5>
+          <h5 class="modal-title" data-i18n="expenseModal.title">Registrar despesa / entrada</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Tipo</label>
+            <label class="form-label" data-i18n="expenseModal.type">Tipo</label>
             <select class="form-select" id="exType"></select>
           </div>
           <div class="row g-2 mb-3">
             <div class="col">
-              <label class="form-label">Direção</label>
+              <label class="form-label" data-i18n="expenseModal.dir">Direção</label>
               <select class="form-select" id="exDir">
-                <option value="out">Saída (gasto)</option>
-                <option value="in">Entrada (ganho)</option>
+                <option value="out" data-i18n="expenseModal.dirOut">Saída (gasto)</option>
+                <option value="in" data-i18n="expenseModal.dirIn">Entrada (ganho)</option>
               </select>
             </div>
             <div class="col">
-              <label class="form-label">Valor (sempre positivo)</label>
+              <label class="form-label" data-i18n="expenseModal.amount">Valor (sempre positivo)</label>
               <input type="number" class="form-control" id="exAmount" step="0.01" min="0">
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Observação</label>
+            <label class="form-label" data-i18n="expenseModal.note">Observação</label>
             <textarea class="form-control" id="exNote" rows="2"></textarea>
           </div>
           <div class="row g-2 mb-3">
             <div class="col">
-              <label class="form-label">Horário em que ocorreu</label>
+              <label class="form-label" data-i18n="expenseModal.time">Horário em que ocorreu</label>
               <input type="time" class="form-control" id="exTime">
             </div>
             <div class="col">
-              <label class="form-label" id="exCityLabel">Cidade onde ocorreu (opcional)</label>
+              <label class="form-label" id="exCityLabel" data-i18n="expenseModal.city">Cidade onde ocorreu (opcional)</label>
               <div class="city-combo">
-                <input type="text" class="form-control city-combo-input" id="exCity" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
-                <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+                <input type="text" class="form-control city-combo-input" id="exCity" placeholder="Digite para buscar…" data-i18n-ph="combo.ph" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades" data-i18n-aria="combo.citiesAria"></ul>
               </div>
             </div>
           </div>
           <div class="alert alert-light border small mb-0" id="exHint"></div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-primary" id="btnSaveExpense">Registrar</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="expenseModal.cancel">Cancelar</button>
+          <button class="btn btn-primary" id="btnSaveExpense" data-i18n="expenseModal.save">Registrar</button>
         </div>
       </div>
     </div>
@@ -728,19 +744,19 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Avançar tempo (+1h)</h5>
+          <h5 class="modal-title" data-i18n="timeModal.title">Avançar tempo (+1h)</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="alert alert-secondary py-2 small mb-3">
-            <div>Agora: <b id="tmNow">—</b></div>
-            <div>Próxima ação: <b id="tmNext">—</b> <span id="tmNextIn" class="text-muted"></span></div>
+            <div><span data-i18n="timeModal.now">Agora:</span> <b id="tmNow">—</b></div>
+            <div><span data-i18n="timeModal.next">Próxima ação:</span> <b id="tmNext">—</b> <span id="tmNextIn" class="text-muted"></span></div>
           </div>
           <div class="d-grid mb-2">
-            <button class="btn btn-primary btn-lg" id="btnAddHour">+1 hora</button>
+            <button class="btn btn-primary btn-lg" id="btnAddHour" data-i18n="timeModal.addHour">+1 hora</button>
           </div>
-          <div class="small text-muted mb-2">Avança 1h de jogo e copia o comando <code>g_set_time</code>. Fica bloqueado quando a próxima ação já chegou — registre-a primeiro.</div>
-          <div class="small text-muted">Comando copiado: <code id="tmCmd">—</code></div>
+          <div class="small text-muted mb-2" data-i18n-html="timeModal.helper">Avança 1h de jogo e copia o comando <code>g_set_time</code>. Fica bloqueado quando a próxima ação já chegou — registre-a primeiro.</div>
+          <div class="small text-muted"><span data-i18n="timeModal.copiedLabel">Comando copiado:</span> <code id="tmCmd">—</code></div>
         </div>
       </div>
     </div>
@@ -751,15 +767,15 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Mudar nível da campanha</h5>
+          <h5 class="modal-title" data-i18n="levelModal.title">Mudar nível da campanha</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="alert alert-light border small" id="lvHint"></div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-primary" id="btnLevelUp">Subir de nível</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="levelModal.cancel">Cancelar</button>
+          <button class="btn btn-primary" id="btnLevelUp" data-i18n="levelModal.up">Subir de nível</button>
         </div>
       </div>
     </div>
@@ -770,17 +786,17 @@
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Contratar funcionário</h5>
+          <h5 class="modal-title" data-i18n="employeeModal.title">Contratar funcionário</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <label class="form-label">Nome do motorista</label>
-          <input type="text" class="form-control" id="empName" placeholder="Ex.: João">
+          <label class="form-label" data-i18n="employeeModal.name">Nome do motorista</label>
+          <input type="text" class="form-control" id="empName" placeholder="Ex.: João" data-i18n-ph="employeeModal.namePh">
           <p class="small text-muted mt-2 mb-0" id="empHint">Salário $1.300 + 70% encargos a cada 30 dias · comissão 5% do frete · despesas de viagem por sua conta.</p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-primary" id="btnSaveEmployee">Contratar</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="employeeModal.cancel">Cancelar</button>
+          <button class="btn btn-primary" id="btnSaveEmployee" data-i18n="employeeModal.hire">Contratar</button>
         </div>
       </div>
     </div>
@@ -791,30 +807,30 @@
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="cfTitle">Confirmar</h5>
+          <h5 class="modal-title" id="cfTitle" data-i18n="confirm.title">Confirmar</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div id="cfBody"></div>
           <div class="mt-3 d-none" id="cfAmountWrap">
-            <label class="form-label small">Valor</label>
+            <label class="form-label small" data-i18n="confirm.amount">Valor</label>
             <input type="number" class="form-control" id="cfAmount" step="0.01" min="0">
           </div>
           <div class="mt-3 d-none" id="cfTimeWrap">
-            <label class="form-label small">Horário em que a ação ocorreu</label>
+            <label class="form-label small" data-i18n="confirm.time">Horário em que a ação ocorreu</label>
             <input type="time" class="form-control" id="cfTime">
           </div>
           <div class="mt-3 d-none" id="cfCityWrap">
-            <label class="form-label small">Cidade onde ocorreu (opcional)</label>
+            <label class="form-label small" data-i18n="confirm.city">Cidade onde ocorreu (opcional)</label>
             <div class="city-combo">
-              <input type="text" class="form-control city-combo-input" id="cfCity" placeholder="Digite para buscar…" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
-              <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades"></ul>
+              <input type="text" class="form-control city-combo-input" id="cfCity" placeholder="Digite para buscar…" data-i18n-ph="combo.ph" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+              <ul class="city-combo-list d-none" role="listbox" aria-label="Cidades" data-i18n-aria="combo.citiesAria"></ul>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-danger" id="btnConfirmOk">Confirmar</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="confirm.cancel">Cancelar</button>
+          <button class="btn btn-danger" id="btnConfirmOk" data-i18n="confirm.ok">Confirmar</button>
         </div>
       </div>
     </div>
@@ -831,11 +847,11 @@
         <div class="modal-body">
           <div class="bg-light rounded-3 p-3 mb-3" id="dsSummary"></div>
           <div class="bg-light rounded-3 p-3 mb-3" id="dsChecklist"></div>
-          <h6 class="text-muted small text-uppercase mb-2">Movimentação do dia</h6>
+          <h6 class="text-muted small text-uppercase mb-2" data-i18n="daySummary.movementsHeader">Movimentação do dia</h6>
           <div id="dsMovements"></div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+          <button class="btn btn-primary" data-bs-dismiss="modal" data-i18n="daySummary.ok">Ok</button>
         </div>
       </div>
     </div>
@@ -846,24 +862,24 @@
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Comando para o console</h5>
+          <h5 class="modal-title" data-i18n="cmd.title">Comando para o console</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <p class="small mb-2" id="cmdStatus"></p>
           <div class="input-group">
             <input type="text" class="form-control font-monospace" id="cmdText" readonly>
-            <button class="btn btn-outline-primary" id="btnCmdCopy" type="button">Copiar</button>
+            <button class="btn btn-outline-primary" id="btnCmdCopy" type="button" data-i18n="cmd.copy">Copiar</button>
           </div>
           <div class="form-check mt-2">
             <input class="form-check-input" type="checkbox" id="chkAutoCopyCmd">
-            <label class="form-check-label small" for="chkAutoCopyCmd">
-              Ignorar esta etapa e copiar automaticamente nas pr&oacute;ximas vezes
+            <label class="form-check-label small" for="chkAutoCopyCmd" data-i18n="cmd.autoCopy">
+              Ignorar esta etapa e copiar automaticamente nas próximas vezes
             </label>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+          <button class="btn btn-primary" data-bs-dismiss="modal" data-i18n="cmd.ok">Ok</button>
         </div>
       </div>
     </div>
@@ -879,7 +895,7 @@
         </div>
         <div class="modal-body" id="chgBody"></div>
         <div class="modal-footer">
-          <button class="btn btn-primary" id="btnChangelogOk">Ok</button>
+          <button class="btn btn-primary" id="btnChangelogOk" data-i18n="changelog.ok">Ok</button>
         </div>
       </div>
     </div>
@@ -887,6 +903,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="version.js"></script>
+  <script src="i18n.js"></script>
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
