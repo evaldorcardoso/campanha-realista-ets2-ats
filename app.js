@@ -176,6 +176,7 @@ function normalizeProfile(p) {
   p.reposition = null;
   p.financing = p.financing || [];
   (p.cargo || []).forEach(c => { c.driver = c.driver || 'player'; });
+  p.rodagem = p.rodagem || null;
   return p;
 }
 
@@ -226,6 +227,7 @@ function makeProfile(name, game) {
     day: 1, weekday: 0, hour: 7, minute: 0,
     currentCity: '', inTransit: false,
     lastSalaryDay: 0, lastInsuranceDay: 0,
+    rodagem: null,
     log: [], cargo: [], employees: [], financing: []
   };
 }
@@ -234,6 +236,10 @@ function makeProfile(name, game) {
 
 function pct(p) { return Math.round(cfg.commission[p.level] * 100); }
 function isInTransit(p) { return p.cargo.some(c => c.status === 'active' && c.driver === 'player'); }
+function isRodando(p) { return !!p.rodagem; }
+function canStartRodagem(p) {
+  return p.level >= 2 || isInTransit(p);
+}
 function money(p, v) { return p.currency + fmtNum(v); }
 function pad2(n) { return String(n).padStart(2, '0'); }
 function uid() { return 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
@@ -523,6 +529,32 @@ function deliverCargo(p, cargo) {
   afterTransaction(p, 'commission');
 }
 
+/* ---------------- Rodagem (viagem manual) ---------------- */
+
+function startRodagem(p) {
+  const startAbs = toAbs(p);
+  p.rodagem = {
+    startAbs: startAbs,
+    startLabel: 'Dia ' + p.day + ' · ' + pad2(p.hour) + ':' + pad2(p.minute || 0)
+  };
+  addEntry(p, {
+    type: 'rodagem_start', label: t('rodagem.started'),
+    amount: 0, note: t('rodagem.startedNote', { t: pad2(p.hour) + ':' + pad2(p.minute || 0) })
+  });
+  afterTransaction(p, 'rodagem_start');
+}
+
+function stopRodagem(p) {
+  if (!p.rodagem) return;
+  const elapsedMin = Math.round(toAbs(p) - p.rodagem.startAbs);
+  p.rodagem = null;
+  addEntry(p, {
+    type: 'rodagem_stop', label: t('rodagem.stopped'),
+    amount: 0, note: t('rodagem.stoppedNote', { d: fmtDur(elapsedMin) })
+  });
+  afterTransaction(p, 'rodagem_stop');
+}
+
 /* ---------------- Deslocamento vazio (viagem sem carga) ---------------- */
 
 function doReposition(p, data) {
@@ -726,9 +758,12 @@ function renderToday() {
   const inTransitBadge = isInTransit(p)
     ? '<span class="badge text-bg-warning"><span class="status-dot bg-dark me-1"></span>' + t('today.inTransit') + '</span>'
     : '<span class="badge text-bg-secondary"><span class="status-dot bg-light me-1"></span>' + t('today.outTransit') + '</span>';
-  const truckBadge = p.level === 1
+const truckBadge = p.level === 1
     ? '<span class="badge text-bg-light border">' + t('today.companyTruck') + '</span>'
     : '<span class="badge text-bg-light border">' + t('today.ownTruck') + '</span>';
+  const rodagemBadge = isRodando(p)
+    ? '<span class="badge text-bg-warning ms-1">' + t('rodagem.active') + '</span>'
+    : '';
 
   row.innerHTML =
     '<div class="col-lg-8">' +
@@ -739,6 +774,7 @@ function renderToday() {
             '<span class="badge text-bg-primary me-1">' + t('today.levelBadge', { n: p.level, name: levelName(p.level) }) + '</span>' +
             truckBadge + ' ' +
             inTransitBadge +
+            rodagemBadge +
           '</span>' +
         '</div>' +
         '<div class="card-body">' +
@@ -767,6 +803,38 @@ function renderToday() {
         '</div>' +
       '</div>' +
     '</div>';
+
+  if (isRodando(p)) {
+    const elapsedMin = Math.round(toAbs(p) - p.rodagem.startAbs);
+    row.innerHTML +=
+      '<div class="col-12 mt-1">' +
+        '<div class="card shadow-sm border-warning">' +
+          '<div class="card-header d-flex justify-content-between align-items-center">' +
+            '<span class="fw-bold">🚚 ' + t('rodagem.active') + '</span>' +
+            '<span class="badge text-bg-warning">' + fmtDur(elapsedMin) + '</span>' +
+          '</div>' +
+          '<div class="card-body">' +
+            '<div class="rodagem-progress">' +
+              '<div class="rodagem-bar"></div>' +
+            '</div>' +
+            '<div class="d-flex justify-content-between align-items-center mt-2 small">' +
+              '<span class="text-muted">' + t('rodagem.since', { t: p.rodagem.startLabel }) + '</span>' +
+              '<button class="btn btn-sm btn-outline-danger" data-act="stopRodagem">⏹ ' + t('rodagem.stopBtn') + '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  } else if (canStartRodagem(p)) {
+    row.innerHTML +=
+      '<div class="col-12 mt-1">' +
+        '<div class="card shadow-sm">' +
+          '<div class="card-body text-center">' +
+            '<button class="btn btn-outline-warning" data-act="startRodagem">🚚 ' + t('rodagem.startBtn') + '</button>' +
+            '<small class="d-block text-muted mt-1">' + t('rodagem.hint') + '</small>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
 }
 
 function mealRegisteredToday(p, kind) {
@@ -866,6 +934,10 @@ function nextEvent(p) {
 }
 
 function suggestAction(p) {
+  // If player is actively driving, suggest to stop first
+  if (isRodando(p)) {
+    return { text: t('rodagem.ongoing', { t: pad2(p.hour) + ':' + pad2(p.minute || 0) }) };
+  }
   const now = currentMinutes(p);
   const inBase = p.currentCity === p.baseCity;
 
@@ -980,6 +1052,11 @@ function renderActions() {
   }
 
   html += '<div class="d-grid gap-2">';
+  if (isRodando(p)) {
+    html += '<button class="btn btn-outline-danger" data-act="stopRodagem">⏹ ' + t('rodagem.stopBtn') + '</button>';
+  } else if (canStartRodagem(p)) {
+    html += '<button class="btn btn-outline-warning" data-act="startRodagem">🚚 ' + t('rodagem.startBtn') + '</button>';
+  }
   if (nextStep) {
     const s = stepBtns.find(b => b.key === nextStep);
     html += '<button class="btn btn-outline-warning btn-sm" data-act="' + s.act + '">' + s.icon + ' ' + s.label +
@@ -1483,9 +1560,33 @@ function handleAction(act) {
     return;
   }
 
-  if (act === 'time') { openTimeModal(); return; }
-  if (act === 'level') { openLevelModal(); return; }
-  if (act === 'sleep') {
+if (act === 'time') { openTimeModal(); return; }
+if (act === 'level') { openLevelModal(); return; }
+if (act === 'startRodagem') {
+  const p2 = currentProfile();
+  if (!canStartRodagem(p2)) {
+    toast(t('rodagem.levelLocked'), 'warning');
+    return;
+  }
+  confirmModal(t('rodagem.startTitle'),
+    t('rodagem.startBody', { t: pad2(p2.hour) + ':' + pad2(p2.minute || 0) }),
+    () => startRodagem(p2),
+    { undo: true });
+  return;
+}
+if (act === 'stopRodagem') {
+  const p2 = currentProfile();
+  if (!p2.rodagem) {
+    toast(t('rodagem.notRunning'), 'warning');
+    return;
+  }
+  confirmModal(t('rodagem.stopTitle'),
+    t('rodagem.stopBody'),
+    () => stopRodagem(p2),
+    { undo: true });
+  return;
+}
+if (act === 'sleep') {
     if (!nextDailyStep(p)) {
       const fromDay = p.day;
       const fromWeekday = p.weekday;
@@ -1537,6 +1638,10 @@ function handleAction(act) {
   if (act.startsWith('meal-')) {
     const kind = act.split('-')[1];
     const meal = cfg.meals[kind];
+    if (isRodando(p)) {
+      toast(t('rodagem.stopFirst'), 'warning');
+      return;
+    }
     const employer = employerPaysMeals(p) && isInTransit(p);
     confirmModal(mealLabel(kind),
       (employer ? t('confirm.employerNoDebit') : t('confirm.debit', { m: money(p, meal.amount) })) +
@@ -1546,6 +1651,10 @@ function handleAction(act) {
     return;
   }
   if (act === 'lodging') {
+    if (isRodando(p)) {
+      toast(t('rodagem.stopFirst'), 'warning');
+      return;
+    }
     const employer = employerPaysLodging(p) && isInTransit(p);
     confirmModal(t('confirm.lodgingTitle'),
       (employer ? t('confirm.employerNoDebit') : t('confirm.debit', { m: money(p, cfg.lodging.amount) })) +

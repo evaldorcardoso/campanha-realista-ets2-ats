@@ -2,13 +2,31 @@
 /* Versão única do app — usada pelo app.js (UI) e pelo sw.js (nome do cache do PWA).
    Ao publicar mudanças: (1) incrementar APP_VERSION aqui e (2) adicionar a entrada
    correspondente no topo de APP_CHANGELOG (mais recente primeiro). */
-var APP_VERSION = '1.3.0';
+var APP_VERSION = '1.4.0';
 var APP_VERSION_DATE = '2026-08-16';
 
 /* Changelog do app — mais recente primeiro. Cada entrada: { version, date, changes[] }
     e opcionalmente changesEn[] (tradução em inglês). O app mostra automaticamente um
     modal quando APP_VERSION muda e ao clicar na versão (navbar). */
 var APP_CHANGELOG = [
+  {
+    version: '1.4.0',
+    date: '2026-08-16',
+    changes: [
+      'Novo: estado "Em rodagem" — marque início/fim de uma viagem manualmente na aba Hoje',
+      'Barra de progresso animada durante a rodagem',
+      'Botões iniciar/parar rodagem nas ações rápidas',
+      'Bloqueio: pare a rodagem antes de registrar refeição ou estadia (pedágio não interrompe)',
+      'Disponível no Nível 2+ (ou Nível 1 em trajeto)'
+    ],
+    changesEn: [
+      'New: "Driving" state — manually mark start/end of a trip on the Today tab',
+      'Animated progress bar while driving',
+      'Start/stop driving buttons in quick actions',
+      'Blocking: stop driving before logging a meal or lodging (toll does not interrupt)',
+      'Available at Level 2+ (or Level 1 while in transit)'
+    ]
+  },
   {
     version: '1.3.0',
     date: '2026-08-16',

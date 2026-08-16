@@ -325,3 +325,30 @@ body {
 .changelog-item li {
   margin-bottom: 0.2rem;
 }
+
+/* Rodagem (driving state) */
+.rodagem-progress {
+  height: 8px;
+  background: var(--bs-secondary-bg);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.rodagem-bar {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #ffc107 0%, #ff9800 50%, #ffc107 100%);
+  background-size: 200% 100%;
+  animation: rodagem-slide 1.8s linear infinite;
+  border-radius: 4px;
+}
+
+@keyframes rodagem-slide {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+[data-bs-theme="dark"] .rodagem-progress {
+  background: var(--bs-body-bg);
+}

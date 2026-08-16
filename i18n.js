@@ -594,7 +594,9 @@ var I18N = {
       noCargoBranch: 'Sem carga em andamento. Vá até a filial da sua empresa ({c}) mais próxima e pegue a primeira carga disponível.',
       noCargoFree: 'Sem carga em andamento. Procure um novo frete (qualquer empresa), registre a carga e siga viagem.',
       shiftRunning: 'Turno em andamento. Continue a rota, registre refeições/estadia e fique de olho no limite de 11h de jornada.',
-      financingDue: 'Vencimento de {n} parcela(s) no total de R$ {m}'
+      financingDue: 'Vencimento de {n} parcela(s) no total de R$ {m}',
+      rodando: 'Em rodagem desde {t}. Pare para registrar refeição/estadia ou continue dirigindo.',
+      rodagem: 'Em rodagem desde {t}. Pare para registrar refeição/estadia ou continue dirigindo.'
     },
 
     entry: {
@@ -651,7 +653,27 @@ var I18N = {
 
     langToast: {
       changed: 'Idioma alterado para Português.'
-    }
+    },
+
+    rodagem: {
+      active: 'Em rodagem',
+      startBtn: 'Iniciar rodagem',
+      stopBtn: 'Parar rodagem',
+      started: 'Rodagem iniciada',
+      startedNote: 'Início às {t}',
+      stopped: 'Rodagem finalizada',
+      stoppedNote: 'Duração: {d}',
+      since: 'Desde {t}',
+      hint: 'Marque o início de uma viagem (com ou sem carga) para acompanhar o tempo.',
+      startTitle: 'Iniciar rodagem',
+      startBody: 'Iniciar rodagem agora ({t})? O tempo de jogo será registrado.',
+      stopTitle: 'Parar rodagem',
+      stopBody: 'Finalizar a rodagem atual? Duração total será registrada.',
+      stopFirst: 'Pare a rodagem antes de registrar uma refeição ou estadia.',
+      levelLocked: 'Disponível apenas a partir do Nível 2 (ou em trajeto no Nível 1).',
+      ongoing: 'Em rodagem desde {t}. Pare para registrar refeição/estadia ou continue dirigindo.',
+      notRunning: 'Nenhuma rodagem em andamento.'
+    },
   },
 
   /* ============================================================ */
@@ -1239,7 +1261,9 @@ var I18N = {
       noCargoBranch: 'No load in progress. Go to the nearest branch of your company ({c}) and take the first available load.',
       noCargoFree: 'No load in progress. Look for a new freight (any company), log the load and hit the road.',
       shiftRunning: 'Shift in progress. Continue the route, log meals/lodging and keep an eye on the 11h work limit.',
-      financingDue: '{n} installment(s) due totaling $ {m}'
+      financingDue: '{n} installment(s) due totaling $ {m}',
+      rodando: 'Driving since {t}. Stop to log meal/lodging or keep driving.',
+      rodagem: 'Driving since {t}. Stop to log meal/lodging or keep driving.'
     },
 
     entry: {
@@ -1296,6 +1320,26 @@ var I18N = {
 
     langToast: {
       changed: 'Language changed to English.'
+    },
+
+    rodagem: {
+      active: 'Driving',
+      startBtn: 'Start driving',
+      stopBtn: 'Stop driving',
+      started: 'Drive started',
+      startedNote: 'Started at {t}',
+      stopped: 'Drive finished',
+      stoppedNote: 'Duration: {d}',
+      since: 'Since {t}',
+      hint: 'Mark the start of a trip (with or without cargo) to track time.',
+      startTitle: 'Start driving',
+      startBody: 'Start driving now ({t})? In-game time will be recorded.',
+      stopTitle: 'Stop driving',
+      stopBody: 'End the current drive? Total duration will be recorded.',
+      stopFirst: 'Stop driving before logging a meal or lodging.',
+      levelLocked: 'Available only from Level 2 (or while in transit at Level 1).',
+      ongoing: 'Driving since {t}. Stop to log meal/lodging or keep driving.',
+      notRunning: 'No active driving.'
     }
   }
 };
