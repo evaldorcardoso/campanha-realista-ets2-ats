@@ -220,6 +220,11 @@ Regras **iguais ao Nível 3** (autônomo), acrescentando o **gerenciamento de fu
 - Transporte **livre para qualquer empresa**.
 - Gerenciar a própria grana e o cansaço — mais próximo do jogo normal.
 
+**Clima diário (regra do app):**
+- A cada **novo dia**, o app sorteia a **probabilidade de chuva** (0–100%).
+- **70%** de chance de sair **até 10%** (chuva baixa); **30%** de chance de sair **mais de 10%** (chuva alta).
+- Valor **informativo** — o jogador decide o impacto na campanha (ex.: evitar pegar carga em dia de chuva alta).
+
 ---
 
 ## 4. Tabela-Resumo Financeiro (por Nível)

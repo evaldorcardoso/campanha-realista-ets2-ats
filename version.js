@@ -2,13 +2,27 @@
 /* Versão única do app — usada pelo app.js (UI) e pelo sw.js (nome do cache do PWA).
    Ao publicar mudanças: (1) incrementar APP_VERSION aqui e (2) adicionar a entrada
    correspondente no topo de APP_CHANGELOG (mais recente primeiro). */
-var APP_VERSION = '1.4.0';
-var APP_VERSION_DATE = '2026-08-16';
+var APP_VERSION = '1.5.0';
+var APP_VERSION_DATE = '2026-08-19';
 
 /* Changelog do app — mais recente primeiro. Cada entrada: { version, date, changes[] }
     e opcionalmente changesEn[] (tradução em inglês). O app mostra automaticamente um
     modal quando APP_VERSION muda e ao clicar na versão (navbar). */
 var APP_CHANGELOG = [
+  {
+    version: '1.5.0',
+    date: '2026-08-19',
+    changes: [
+      'Novo: probabilidade de chuva diária — o app sorteia 0–100% a cada novo dia (70% de chance de até 10%, 30% de chance de mais de 10%).',
+      'Valor mostrado no painel "Chuva hoje" e na previsão do próximo dia no resumo diário.',
+      'Registrado por dia no perfil (informativo — você aplica a regra no jogo).'
+    ],
+    changesEn: [
+      'New: daily rain chance — the app rolls 0–100% every new day (70% chance of up to 10%, 30% chance of above 10%).',
+      'Shown on the "Rain today" panel badge and as next-day forecast in the daily summary.',
+      'Tracked per day in the profile (informational — you apply the rule in-game).'
+    ]
+  },
   {
     version: '1.4.0',
     date: '2026-08-16',

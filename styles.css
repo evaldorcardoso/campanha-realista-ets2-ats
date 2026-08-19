@@ -48,7 +48,8 @@ body {
 }
 
 [data-bs-theme="dark"] #dsSummary,
-[data-bs-theme="dark"] #dsChecklist {
+[data-bs-theme="dark"] #dsChecklist,
+[data-bs-theme="dark"] #dsWeather {
   color: #212529;
 }
 

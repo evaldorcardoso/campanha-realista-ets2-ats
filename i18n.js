@@ -78,6 +78,7 @@ var I18N = {
       shift: 'Turno:',
       pctOfFreight: '{p}% do frete',
       advanceTime: 'Avançar tempo (+1h)',
+      rainBadge: '🌧 Chuva hoje: {p}%',
       actionsHeader: 'Ações rápidas',
       checklistHeader: 'Checklist do dia',
       noProfile: 'Crie um perfil para começar',
@@ -293,7 +294,8 @@ var I18N = {
         'Estadia (fora de trajeto) {m} — avança para o dia seguinte {t}',
         'Turno: {t} · intervalo de jornada: 11h',
         'Descarga: {d}',
-        'Tag: {m} por país · Seguro ATS: {m2}/{d} dias'
+        'Tag: {m} por país · Seguro ATS: {m2}/{d} dias',
+        'Clima: a cada novo dia o app sorteia a chuva (0–100%) — 70% de chance de até 10%, 30% de chance de mais de 10%. Valor informativo.'
       ],
       niveis: [
         '<b>N1 Empregado:</b> salário {s}/mês · comissão {c}% · pedágio/balsa-trem/combustível/refeições-em-viagem da empresa · demissão se tombar (+10 dias)',
@@ -541,6 +543,8 @@ var I18N = {
       dayPrefix: 'Dia {n}',
       empty: 'Nenhuma movimentação no período.',
       movementsHeader: 'Movimentação do dia',
+      weatherTitle: 'Previsão de chuva do próximo dia',
+      weatherValue: '{p}%',
       ok: 'Ok'
     },
 
@@ -745,6 +749,7 @@ var I18N = {
       shift: 'Shift:',
       pctOfFreight: '{p}% of the freight',
       advanceTime: 'Advance time (+1h)',
+      rainBadge: '🌧 Rain today: {p}%',
       actionsHeader: 'Quick actions',
       checklistHeader: 'Daily checklist',
       noProfile: 'Create a profile to start',
@@ -960,7 +965,8 @@ var I18N = {
         'Lodging (off-transit) {m} — advances to the next day {t}',
         'Shift: {t} · work interval: 11h',
         'Unloading: {d}',
-        'Tag: {m} per country · ATS insurance: {m2}/{d} days'
+        'Tag: {m} per country · ATS insurance: {m2}/{d} days',
+        'Weather: every new day the app rolls the rain (0–100%) — 70% chance of up to 10%, 30% chance of above 10%. Informational value.'
       ],
       niveis: [
         '<b>L1 Employee:</b> salary {s}/month · commission {c}% · toll/ferry-train/fuel/on-road meals paid by company · fired on rollover (+10 days)',
@@ -1208,6 +1214,8 @@ var I18N = {
       dayPrefix: 'Day {n}',
       empty: 'No movements in the period.',
       movementsHeader: 'Day movements',
+      weatherTitle: 'Next day rain forecast',
+      weatherValue: '{p}%',
       ok: 'Ok'
     },
 

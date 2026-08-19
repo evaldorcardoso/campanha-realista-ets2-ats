@@ -175,6 +175,7 @@ function normalizeProfile(p) {
   p.minute = p.minute || 0;
   p.reposition = null;
   p.financing = p.financing || [];
+  p.weather = p.weather || {};
   (p.cargo || []).forEach(c => { c.driver = c.driver || 'player'; });
   p.rodagem = p.rodagem || null;
   return p;
@@ -228,6 +229,7 @@ function makeProfile(name, game) {
     currentCity: '', inTransit: false,
     lastSalaryDay: 0, lastInsuranceDay: 0,
     rodagem: null,
+    weather: { 1: rollRain() },
     log: [], cargo: [], employees: [], financing: []
   };
 }
@@ -244,6 +246,19 @@ function money(p, v) { return p.currency + fmtNum(v); }
 function pad2(n) { return String(n).padStart(2, '0'); }
 function uid() { return 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
 
+/* Clima: probabilidade de chuva (0–100) sorteada por dia. Regra: 70% de
+   chance de dar até 10%, 30% de chance de dar mais de 10%. Informativo. */
+
+function rollRain() {
+  return Math.random() < 0.7
+    ? Math.floor(Math.random() * 11)        /* 0–10 */
+    : 11 + Math.floor(Math.random() * 90);  /* 11–100 */
+}
+
+function rainForDay(p, day) {
+  return (p.weather && typeof p.weather[day] === 'number') ? p.weather[day] : null;
+}
+
 /* Tempo: relógio da carreira (day / weekday / hour / minute) */
 
 function currentMinutes(p) { return p.hour * 60 + (p.minute || 0); }
@@ -257,6 +272,12 @@ function fromAbs(p, abs) {
   const rem = ((abs % 1440) + 1440) % 1440;
   p.hour = Math.floor(rem / 60);
   p.minute = rem % 60;
+  if (p.day > oldDay) {
+    p.weather = p.weather || {};
+    for (let d = oldDay + 1; d <= p.day; d++) {
+      if (typeof p.weather[d] !== 'number') p.weather[d] = rollRain();
+    }
+  }
 }
 
 function timeToAbsolute(p, h, m) {
@@ -764,6 +785,10 @@ const truckBadge = p.level === 1
   const rodagemBadge = isRodando(p)
     ? '<span class="badge text-bg-warning ms-1">' + t('rodagem.active') + '</span>'
     : '';
+  const rainNow = rainForDay(p, p.day);
+  const rainBadge = rainNow !== null
+    ? '<span class="badge ms-1 ' + (rainNow >= 11 ? 'text-bg-warning' : 'text-bg-info') + '">' + t('today.rainBadge', { p: rainNow }) + '</span>'
+    : '';
 
   row.innerHTML =
     '<div class="col-lg-8">' +
@@ -775,6 +800,7 @@ const truckBadge = p.level === 1
             truckBadge + ' ' +
             inTransitBadge +
             rodagemBadge +
+            rainBadge +
           '</span>' +
         '</div>' +
         '<div class="card-body">' +
@@ -1431,6 +1457,7 @@ function renderRules() {
       '<li>' + t('rules.custos.2', { t: fmtTurno() }) + '</li>' +
       '<li>' + t('rules.custos.3', { d: fmtDur(cfg.turno.deliveryMin) }) + '</li>' +
       '<li>' + t('rules.custos.4', { m: m(cfg.tag), m2: m(cfg.insuranceAts), d: cfg.salaryDay }) + '</li>' +
+      '<li>' + t('rules.custos.5') + '</li>' +
       '</ul>',
     rulesNiveisBody: '<ul class="mb-0">' +
       '<li>' + t('rules.niveis.0', { s: m(cfg.salary[1]), c: Math.round(cfg.commission[1] * 100) }) + '</li>' +
@@ -2015,6 +2042,22 @@ function showDaySummary(p, fromDay, toDayExclusive, fromWeekday, onClose) {
       '<div class="col-6"><strong>' + t('daySummary.final') + '</strong></div><div class="col-6 text-end"><strong>' + money(p, end) + '</strong></div>' +
     '</div>';
 
+  const dsWeather = document.getElementById('dsWeather');
+  const rainNew = rainForDay(p, p.day);
+  if (dsWeather) {
+    if (rainNew !== null && p.day > fromDay) {
+      dsWeather.classList.remove('d-none');
+      dsWeather.innerHTML =
+        '<div class="d-flex justify-content-between align-items-center">' +
+          '<span><strong>' + t('daySummary.weatherTitle') + '</strong> <small class="opacity-75">(' + t('daySummary.dayPrefix', { n: p.day }) + ')</small></span>' +
+          '<span class="badge ' + (rainNew >= 11 ? 'text-bg-warning' : 'text-bg-info') + '">' + t('daySummary.weatherValue', { p: rainNew }) + '</span>' +
+        '</div>';
+    } else {
+      dsWeather.classList.add('d-none');
+      dsWeather.innerHTML = '';
+    }
+  }
+
   const clKeys = [
     { type: 'meal_breakfast', label: mealLabel('breakfast') },
     { type: 'meal_lunch', label: mealLabel('lunch') },
@@ -2237,6 +2280,7 @@ document.getElementById('importFile').addEventListener('change', (ev) => {
       () => {
         pushUndo();
         state = data;
+        state.profiles.forEach(normalizeProfile);
         saveState();
         if (data.config) {
           cfg = sanitizeConfig(data.config);
