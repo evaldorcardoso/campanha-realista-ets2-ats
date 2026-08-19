@@ -176,6 +176,7 @@ function normalizeProfile(p) {
   p.reposition = null;
   p.financing = p.financing || [];
   p.weather = p.weather || {};
+  p.traffic = p.traffic || {};
   (p.cargo || []).forEach(c => { c.driver = c.driver || 'player'; });
   p.rodagem = p.rodagem || null;
   return p;
@@ -230,6 +231,7 @@ function makeProfile(name, game) {
     lastSalaryDay: 0, lastInsuranceDay: 0,
     rodagem: null,
     weather: { 1: rollRain() },
+    traffic: { 1: rollTraffic(0) },
     log: [], cargo: [], employees: [], financing: []
   };
 }
@@ -259,6 +261,30 @@ function rainForDay(p, day) {
   return (p.weather && typeof p.weather[day] === 'number') ? p.weather[day] : null;
 }
 
+/* Tráfego: probabilidade (0–100) sorteada por dia, ponderada pelo dia da semana
+   (sexta = pico de tráfego na Europa; domingo = mais calmo), e valor g_traffic
+   (0.8–3.0) derivado dela. 3.0 = máximo prático do comando (acima disso a IA
+   fica instável). */
+
+const TRAFFIC_WEEKDAY_MEAN = [60, 50, 45, 55, 75, 50, 28]; /* Seg..Dom */
+
+function rollTraffic(weekday) {
+  const mean = TRAFFIC_WEEKDAY_MEAN[((weekday % 7) + 7) % 7];
+  return Math.max(0, Math.min(100, Math.round(mean + (Math.random() * 100 - 50))));
+}
+
+function trafficProbForDay(p, day) {
+  return (p.traffic && typeof p.traffic[day] === 'number') ? p.traffic[day] : null;
+}
+
+function trafficForDay(p, day) {
+  const prob = trafficProbForDay(p, day);
+  if (prob === null) return null;
+  let v = 0.8 + (prob / 100) * 2.2;
+  v = Math.max(0.8, Math.min(3.0, v));
+  return Math.round(v * 10) / 10;
+}
+
 /* Tempo: relógio da carreira (day / weekday / hour / minute) */
 
 function currentMinutes(p) { return p.hour * 60 + (p.minute || 0); }
@@ -276,6 +302,7 @@ function fromAbs(p, abs) {
     p.weather = p.weather || {};
     for (let d = oldDay + 1; d <= p.day; d++) {
       if (typeof p.weather[d] !== 'number') p.weather[d] = rollRain();
+      if (typeof p.traffic[d] !== 'number') p.traffic[d] = rollTraffic((((p.weekday + (d - p.day)) % 7) + 7) % 7);
     }
   }
 }
@@ -789,6 +816,13 @@ const truckBadge = p.level === 1
   const rainBadge = rainNow !== null
     ? '<span class="badge ms-1 ' + (rainNow >= 11 ? 'text-bg-warning' : 'text-bg-info') + '">' + t('today.rainBadge', { p: rainNow }) + '</span>'
     : '';
+  const trafficNow = trafficForDay(p, p.day);
+  const trafficBadge = trafficNow !== null
+    ? '<span class="ms-1 d-inline-flex align-items-center gap-1">' +
+        '<span class="badge text-bg-primary" title="' + t('today.trafficTitle', { p: trafficProbForDay(p, p.day) }) + '">' + t('today.trafficBadge', { v: trafficNow }) + '</span>' +
+        '<button type="button" class="btn btn-sm btn-outline-primary py-0 px-1" data-act="copyTraffic" title="' + t('today.copyTraffic', { v: trafficNow }) + '">⧉</button>' +
+      '</span>'
+    : '';
 
   row.innerHTML =
     '<div class="col-lg-8">' +
@@ -801,6 +835,7 @@ const truckBadge = p.level === 1
             inTransitBadge +
             rodagemBadge +
             rainBadge +
+            trafficBadge +
           '</span>' +
         '</div>' +
         '<div class="card-body">' +
@@ -1587,6 +1622,13 @@ function handleAction(act) {
     return;
   }
 
+  if (act === 'copyTraffic') {
+    const v = trafficForDay(p, p.day);
+    if (v === null) return;
+    copyText('g_traffic ' + v).then(ok => toast(ok ? t('cmd.copiedToast') : t('cmd.failToast'), ok ? 'success' : 'danger'));
+    return;
+  }
+
 if (act === 'time') { openTimeModal(); return; }
 if (act === 'level') { openLevelModal(); return; }
 if (act === 'startRodagem') {
@@ -2055,6 +2097,22 @@ function showDaySummary(p, fromDay, toDayExclusive, fromWeekday, onClose) {
     } else {
       dsWeather.classList.add('d-none');
       dsWeather.innerHTML = '';
+    }
+  }
+
+  const dsTraffic = document.getElementById('dsTraffic');
+  const trafficNew = trafficForDay(p, p.day);
+  if (dsTraffic) {
+    if (trafficNew !== null && p.day > fromDay) {
+      dsTraffic.classList.remove('d-none');
+      dsTraffic.innerHTML =
+        '<div class="d-flex justify-content-between align-items-center">' +
+          '<span><strong>' + t('daySummary.trafficTitle') + '</strong> <small class="opacity-75">(' + t('daySummary.dayPrefix', { n: p.day }) + ')</small></span>' +
+          '<span class="badge text-bg-primary">' + t('daySummary.trafficValue', { v: trafficNew }) + '</span>' +
+        '</div>';
+    } else {
+      dsTraffic.classList.add('d-none');
+      dsTraffic.innerHTML = '';
     }
   }
 

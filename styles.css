@@ -49,7 +49,8 @@ body {
 
 [data-bs-theme="dark"] #dsSummary,
 [data-bs-theme="dark"] #dsChecklist,
-[data-bs-theme="dark"] #dsWeather {
+[data-bs-theme="dark"] #dsWeather,
+[data-bs-theme="dark"] #dsTraffic {
   color: #212529;
 }
 
@@ -100,6 +101,10 @@ body {
   align-items: center;
   gap: 0.5rem;
   padding: 0.3rem 0;
+}
+
+.badge {
+  font-size: 0.9em;
 }
 
 .check-item .badge {

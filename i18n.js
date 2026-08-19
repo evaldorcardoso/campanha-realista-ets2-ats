@@ -79,6 +79,9 @@ var I18N = {
       pctOfFreight: '{p}% do frete',
       advanceTime: 'Avançar tempo (+1h)',
       rainBadge: '🌧 Chuva hoje: {p}%',
+      trafficBadge: '🚗 Tráfego hoje: {v}×',
+      trafficTitle: 'Probabilidade de tráfego: {p}%',
+      copyTraffic: 'Copiar comando g_traffic {v}',
       actionsHeader: 'Ações rápidas',
       checklistHeader: 'Checklist do dia',
       noProfile: 'Crie um perfil para começar',
@@ -545,6 +548,8 @@ var I18N = {
       movementsHeader: 'Movimentação do dia',
       weatherTitle: 'Previsão de chuva do próximo dia',
       weatherValue: '{p}%',
+      trafficTitle: 'Tráfego do próximo dia',
+      trafficValue: '{v}×',
       ok: 'Ok'
     },
 
@@ -750,6 +755,9 @@ var I18N = {
       pctOfFreight: '{p}% of the freight',
       advanceTime: 'Advance time (+1h)',
       rainBadge: '🌧 Rain today: {p}%',
+      trafficBadge: '🚗 Traffic today: {v}×',
+      trafficTitle: 'Traffic probability: {p}%',
+      copyTraffic: 'Copy g_traffic {v} command',
       actionsHeader: 'Quick actions',
       checklistHeader: 'Daily checklist',
       noProfile: 'Create a profile to start',
@@ -1216,6 +1224,8 @@ var I18N = {
       movementsHeader: 'Day movements',
       weatherTitle: 'Next day rain forecast',
       weatherValue: '{p}%',
+      trafficTitle: 'Next day traffic',
+      trafficValue: '{v}×',
       ok: 'Ok'
     },
 

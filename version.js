@@ -15,12 +15,18 @@ var APP_CHANGELOG = [
     changes: [
       'Novo: probabilidade de chuva diária — o app sorteia 0–100% a cada novo dia (70% de chance de até 10%, 30% de chance de mais de 10%).',
       'Valor mostrado no painel "Chuva hoje" e na previsão do próximo dia no resumo diário.',
-      'Registrado por dia no perfil (informativo — você aplica a regra no jogo).'
+      'Registrado por dia no perfil (informativo — você aplica a regra no jogo).',
+      'Novo: tráfego diário — sorteia probabilidade de tráfego (0–100%) por dia, ponderada pelo dia da semana (sexta = pico na Europa, domingo = mais calmo).',
+      'Valor g_traffic (0.8–3.0) derivado da probabilidade, mostrado no painel "Hoje" com botão para copiar o comando do console.',
+      'Previsão de tráfego do próximo dia também no resumo diário.'
     ],
     changesEn: [
       'New: daily rain chance — the app rolls 0–100% every new day (70% chance of up to 10%, 30% chance of above 10%).',
       'Shown on the "Rain today" panel badge and as next-day forecast in the daily summary.',
-      'Tracked per day in the profile (informational — you apply the rule in-game).'
+      'Tracked per day in the profile (informational — you apply the rule in-game).',
+      'New: daily traffic — rolls a traffic probability (0–100%) per day, weighted by weekday (Friday = Europe peak, Sunday = calmest).',
+      'g_traffic value (0.8–3.0) derived from the probability, shown on the "Today" panel with a button to copy the console command.',
+      'Next-day traffic forecast also in the daily summary.'
     ]
   },
   {
