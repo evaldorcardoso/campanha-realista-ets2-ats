@@ -337,6 +337,7 @@ function employerPaysLodging(p) { return p.level <= 2; }
 function employerCoversExpense(p, typeId) {
   if (typeId === 'toll' || typeId === 'ferry') return p.level <= 2;
   if (typeId === 'fuel' || typeId === 'maintenance') return p.level <= 1;
+  if (typeId === 'emp_travel') return p.level <= 1;
   return false;
 }
 
@@ -807,7 +808,7 @@ function renderToday() {
     ? '<span class="badge text-bg-warning"><span class="status-dot bg-dark me-1"></span>' + t('today.inTransit') + '</span>'
     : '<span class="badge text-bg-secondary"><span class="status-dot bg-light me-1"></span>' + t('today.outTransit') + '</span>';
 const truckBadge = p.level === 1
-    ? '<span class="badge text-bg-light border">' + t('today.companyTruck') + '</span>'
+    ? (isInTransit(p) ? '<span class="badge text-bg-light border">' + t('today.companyTruck') + '</span>' : '')
     : '<span class="badge text-bg-light border">' + t('today.ownTruck') + '</span>';
   const rodagemBadge = isRodando(p)
     ? '<span class="badge text-bg-warning ms-1">' + t('rodagem.active') + '</span>'
@@ -1140,11 +1141,17 @@ function renderActions() {
       html += '<button class="btn btn-outline-success" data-act="deliver-' + c.id + '">' + t('actions.deliver', { from: c.from, to: c.to, m: money(p, c.commission) }) + '</button>';
     });
   }
-  if (!isInTransit(p)) {
+  const hasTruck = p.level >= 2 || isInTransit(p);
+  if (!isInTransit(p) && p.level >= 2) {
     html += '<button class="btn btn-outline-secondary" data-act="reposition">' + t('actions.reposition') + '</button>';
   }
-  html += '<button class="btn btn-outline-secondary" data-act="toll">' + t('actions.toll') + '</button>';
-  html += '<button class="btn btn-outline-secondary" data-act="fuel">' + t('actions.fuel') + '</button>';
+  if (hasTruck) {
+    html += '<button class="btn btn-outline-secondary" data-act="toll">' + t('actions.toll') + '</button>';
+    html += '<button class="btn btn-outline-secondary" data-act="fuel">' + t('actions.fuel') + '</button>';
+  }
+  if (p.level === 1 && !isInTransit(p)) {
+    html += '<button class="btn btn-outline-secondary" data-act="empTravelSelf">' + t('actions.empTravel') + '</button>';
+  }
   html += '<button class="btn btn-outline-secondary" data-act="expense">' + t('actions.expense') + '</button>';
   html += '</div>';
 
@@ -1688,6 +1695,7 @@ if (act === 'sleep') {
   if (act === 'cargo') { openCargoModal(); return; }
   if (act === 'expense') { openExpenseModal(); return; }
   if (act === 'toll' || act === 'fuel') { openQuickExpenseConfirm(p, act); return; }
+  if (act === 'empTravelSelf') { openQuickExpenseConfirm(p, 'emp_travel'); return; }
   if (act === 'reposition') { openRepositionModal(); return; }
   if (act === 'financing') { openFinancingModal(); return; }
   if (act === 'financingPay') { handleFinancingPay(); return; }

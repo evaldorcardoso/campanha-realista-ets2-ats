@@ -106,6 +106,7 @@ var I18N = {
       toll: '🛣 Registrar pedágio',
       fuel: '⛽ Registrar abastecimento',
       expense: '💸 Registrar despesa / lançamento',
+      empTravel: '🧳 Despesa de viagem do funcionário',
       payFinancing: 'Pagar parcela ({m})'
     },
 
@@ -782,6 +783,7 @@ var I18N = {
       toll: '🛣 Log toll',
       fuel: '⛽ Log refueling',
       expense: '💸 Log expense / entry',
+      empTravel: '🧳 Employee travel expense',
       payFinancing: 'Pay installment ({m})'
     },
 

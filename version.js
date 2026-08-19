@@ -18,7 +18,9 @@ var APP_CHANGELOG = [
       'Registrado por dia no perfil (informativo — você aplica a regra no jogo).',
       'Novo: tráfego diário — sorteia probabilidade de tráfego (0–100%) por dia, ponderada pelo dia da semana (sexta = pico na Europa, domingo = mais calmo).',
       'Valor g_traffic (0.8–3.0) derivado da probabilidade, mostrado no painel "Hoje" com botão para copiar o comando do console.',
-      'Previsão de tráfego do próximo dia também no resumo diário.'
+      'Previsão de tráfego do próximo dia também no resumo diário.',
+      'Nível 1 fora de trajeto: sem caminhão, o badge "Caminhão da empresa" é ocultado e as ações de deslocamento vazio, pedágio e abastecimento somem das ações rápidas.',
+      'Novo: botão de ação rápida no Nível 1 fora de trajeto para registrar "Despesa de viagem do funcionário" (coberta pela empresa, débito 0).'
     ],
     changesEn: [
       'New: daily rain chance — the app rolls 0–100% every new day (70% chance of up to 10%, 30% chance of above 10%).',
@@ -26,7 +28,9 @@ var APP_CHANGELOG = [
       'Tracked per day in the profile (informational — you apply the rule in-game).',
       'New: daily traffic — rolls a traffic probability (0–100%) per day, weighted by weekday (Friday = Europe peak, Sunday = calmest).',
       'g_traffic value (0.8–3.0) derived from the probability, shown on the "Today" panel with a button to copy the console command.',
-      'Next-day traffic forecast also in the daily summary.'
+      'Next-day traffic forecast also in the daily summary.',
+      'Level 1 not in transit: no truck — the "Company truck" badge is hidden and the empty relocation, toll and refueling actions are removed from quick actions.',
+      'New: quick action button at Level 1 not in transit to log "Employee travel expense" (company-covered, zero debit).'
     ]
   },
   {
